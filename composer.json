@@ -15,6 +15,9 @@
     "autoload": {
         "psr-0": {
             "Ciberfactura": "src/"
-        }
+        },
+        "classmap": [
+            "src/"
+        ]
     }
 }
