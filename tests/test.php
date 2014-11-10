@@ -2,8 +2,8 @@
 
     require_once __DIR__ . '/../vendor/autoload.php';
 
-    use HelloWorld\SayHello;
+    use Ciberfactura\Cfdi;
 
-    echo SayHello::world();
+    echo Cfdi::test();
 
 ?>
