@@ -21,7 +21,8 @@
         },
         "classmap": [
             "src/",
-            "src/autoload.php"
+            "src/autoload.php",
+            "src/models"
         ]
     }
 }

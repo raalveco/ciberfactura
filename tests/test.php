@@ -7,6 +7,6 @@
 
     echo Cfdi::test();
 
-    echo Client::find(1);
+    $emisor = new CfdiEmisor();
 
 ?>
