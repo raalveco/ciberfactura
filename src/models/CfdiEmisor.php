@@ -1,0 +1,6 @@
+<?php
+use \Illuminate\Database\Eloquent\Model;
+
+class CfdiEmisor extends Model{
+    protected $table = "cfdi_emisores";
+}
