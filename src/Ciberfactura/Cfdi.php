@@ -24,7 +24,7 @@ class Cfdi{
     protected $version = "3.2";
 
     public function __construct(){
-        $url = app_path()."/".Config::get('raalveco/ciberfactura::config.cer');
+        $url = app_path()."/".Config::get('raalveco/ciberfactura::cer');
 
         echo $url;
 
