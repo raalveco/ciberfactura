@@ -24,48 +24,12 @@ class Cfdi{
     protected $version = "3.2";
 
     public function __construct(){
-        print_r(Config::get('packages/raalveco/ciberfactura/config.cer'));
+        $url_cer = app_path()."/".Config::get('packages/raalveco/ciberfactura/config.cer');
 
-        echo "<br><br>";
+        echo $url_cer;
 
-        print_r(Config::get('packages/raalveco/ciberfactura/cer'));
-
-        echo "<br><br>";
-
-        print_r(Config::get('packages.raalveco.ciberfactura.cer'));
-
-        echo "<br><br>";
-
-        print_r(Config::get('packages.raalveco.ciberfactura.config.cer'));
-
-        echo "<br><br>";
-
-        print_r(Config::get('raalveco.ciberfactura::config.cer'));
-
-        echo "<br><br>";
-
-        print_r(Config::get('raalveco.ciberfactura::cer'));
-
-        echo "<br><br>";
-
-        print_r(Config::get('raalveco/ciberfactura::config.cer'));
-
-        echo "<br><br>";
-
-        print_r(Config::get('raalveco/ciberfactura::cer'));
-
-        echo "<br><br>";
-
-        print_r(Config::get('ciberfactura::config.cer'));
-
-        echo "<br><br>";
-
-        print_r(Config::get('ciberfactura::cer'));
-
-        echo "<br><br>";
-
-        //$this->noCertificado = CfdiBase::getSerialFromCertificate( APP_PATH.'public/cfdi/'.$contribuyente_rfc.'/certificado/'.$contribuyente_no_certificado.'.cer' );
-        //$this->certificado = CfdiBase::getCertificate( APP_PATH.'public/cfdi/'.$contribuyente_rfc.'/certificado/'.$contribuyente_no_certificado.'.cer', false );
+        $this->noCertificado = CfdiBase::getSerialFromCertificate( $url_cer );
+        $this->certificado = CfdiBase::getCertificate( $url_cer, false );
     }
 
     public function constructor($cfdi){
