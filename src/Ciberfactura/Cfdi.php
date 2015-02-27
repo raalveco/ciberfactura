@@ -10,7 +10,7 @@ use CfdiReceptor;
 use CfdiRegimen;
 use CfdiSucursal;
 
-use Illuminate\Config;
+use Illuminate\Support\Facades\Config;
 
 class Cfdi{
     public $xml;
