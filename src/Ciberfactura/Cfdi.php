@@ -10,6 +10,8 @@ use CfdiReceptor;
 use CfdiRegimen;
 use CfdiSucursal;
 
+use Illuminate\Config;
+
 class Cfdi{
     public $xml;
     public $cadenaOriginal;
