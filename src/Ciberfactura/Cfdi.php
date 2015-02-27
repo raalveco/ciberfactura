@@ -11,6 +11,12 @@ use CfdiRegimen;
 use CfdiSucursal;
 
 class Cfdi{
+    protected $version = "3.2";
+
+    public function __construct($subtotal, $total){
+
+    }
+
     public static function test()
     {
         $factura = new CfdiFactura();
