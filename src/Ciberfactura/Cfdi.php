@@ -24,11 +24,11 @@ class Cfdi{
     protected $version = "3.2";
 
     public function __construct(){
-        print_r(Config::get('raalveco/ciberfactura::cer'));
+        print_r(Config::get('raalveco.ciberfactura::cer'));
 
         echo "<br><br>";
 
-        print_r(Config::get('raalveco/ciberfactura'));
+        print_r(Config::get('raalveco.ciberfactura'));
 
         echo "<br><br>";
 
