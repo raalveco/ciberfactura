@@ -12,17 +12,8 @@
 
 return array(
 
-	/*
-	|--------------------------------------------------------------------------
-	| Primera Variable de Configuración
-	|--------------------------------------------------------------------------
-	|
-	| Esta variable de configuración será definida para lo que sea necesario
-	|
-	| Supported: CFDI 3.2
-	|
-	*/
-
-	'driver' => 'eloquent',
+	'cer' => 'certificado/20001000000200000216.cer',
+    'key' => 'certificado/20001000000200000216.key',
+    'logo' => 'logotipo/logotipo.png',
 
 );
