@@ -26,23 +26,23 @@ class Cfdi{
     public function __construct(){
         $url_cer = app_path()."/".Config::get('packages/raalveco/ciberfactura/config.cer');
 
-        echo $url_cer;
-
         $this->noCertificado = CfdiBase::getSerialFromCertificate( $url_cer );
         $this->certificado = CfdiBase::getCertificate( $url_cer, false );
     }
 
-    public function constructor($cfdi){
-
-        $this->cfdi = CfdiFactura::consultar($cfdi);
+    public function loadCfdi($cfdi_id){
+        $this->cfdi = CfdiFactura::find($cfdi_id);
 
         $this->xml = new XmlGenerator($this->cfdi);
 
-        $this->tmp_file = APP_PATH."public/temp/".sha1(date("Y-m-d H:i:s".rand(0,100000))).".xml";
+        if(!file_exists(public_path()."/temp")){
+            mkdir(public_path()."/temp");
+        }
 
+        $this->tmp_file = public_path()."/temp/".sha1(date("Y-m-d H:i:s".rand(0,100000))).".xml";
         $this->xml->saveFile($this->tmp_file);
 
-        $this->cadenaOriginal = SimpleCFDI::getCadenaOriginal($this->tmp_file, APP_PATH.'cadenaoriginal_3_2.xslt');
+        $this->cadenaOriginal = CfdiBase::getCadenaOriginal($this->tmp_file, APP_PATH.'cadenaoriginal_3_2.xslt');
     }
 
     public function sellar2(){
@@ -137,17 +137,5 @@ class Cfdi{
         $cadena = substr($cadena,0,strlen($cadena)-4)."||";
 
         return $cadena;
-    }
-
-    public static function test()
-    {
-        $factura = new CfdiFactura();
-
-        $factura->serie = "AX";
-        $factura->folio = 3894;
-
-        $factura->total = 116.00;
-
-        $factura->save();
     }
 }

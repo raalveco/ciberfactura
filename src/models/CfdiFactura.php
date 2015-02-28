@@ -89,9 +89,58 @@ class CfdiFactura extends Model{
         $regimen = new CfdiRegimen();
 
         $regimen->cfdi_id = $this->id;
-        $regimen->regimen = $regimen_name;
+        $regimen->regimen = $regimen_name   ;
 
         $regimen->save();
+    }
+
+    public function addSucursal($rfc, $nombre="", $calle="", $exterior="", $interior="", $colonia="", $localidad="", $municipio="", $estado="", $pais="", $cp=""){
+        $this->save();
+
+        if(CfdiSucursal::whereRaw("cfdi_id = $this->id")->count() > 0){
+            $sucursal = CfdiSucursal::whereRaw("cfdi_id = $this->id")->first();
+        }
+        else{
+            $sucursal = new CfdiSucursal();
+        }
+
+        $sucursal->cfdi_id = $this->id;
+        $sucursal->calle = $calle;
+        $sucursal->noExterior = $exterior;
+        $sucursal->noInterior = $interior;
+        $sucursal->colonia = $colonia;
+        $sucursal->localidad = $localidad;
+        $sucursal->municipio = $municipio;
+        $sucursal->estado = $estado;
+        $sucursal->pais = $pais;
+        $sucursal->codigoPostal = $cp;
+
+        $sucursal->save();
+
+        return $sucursal;
+    }
+
+    public function addComplemento($version, $uuid, $fecha, $selloCFD, $certificadoSAT, $selloSAT){
+        $this->save();
+
+        if(CfdiComplemento::whereRaw("cfdi_id = $this->id")->count() > 0){
+            $complemento = CfdiComplemento::whereRaw("cfdi_id = $this->id")->first();
+        }
+        else{
+            $complemento = new CfdiComplemento();
+        }
+
+        $complemento->cfdi_id = $this->id;
+        $complemento->version = $version;
+        $complemento->UUID = $uuid;
+        $complemento->fechaTimbrado = $fecha;
+        $complemento->selloCFD = $selloCFD;
+        $complemento->noCertificadoSAT = $certificadoSAT;
+        $complemento->selloSAT = $selloSAT;
+
+        $complemento->save();
+
+        return $complemento;
     }
 
     public function emisor(){
