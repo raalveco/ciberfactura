@@ -1,4 +1,6 @@
 <?php
+    namespace Ciberfactura;
+
     class CfdiCancelacion{
         private $cfdi;
         private $xml;

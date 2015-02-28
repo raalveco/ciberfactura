@@ -1,4 +1,6 @@
 <?php
+    namespace Ciberfactura;
+
     class Nodo{
         public $nombre;
         public $atributos;

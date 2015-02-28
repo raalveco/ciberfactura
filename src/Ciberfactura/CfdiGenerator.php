@@ -1,4 +1,6 @@
 <?php
+    namespace Ciberfactura;
+
     class CfdiGenerator{
         private $xml;
         private $cfdi;

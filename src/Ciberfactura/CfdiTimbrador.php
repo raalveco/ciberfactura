@@ -1,4 +1,5 @@
 <?php
+    namespace Ciberfactura;
 
     class CfdiTimbrador{
         private $namespace = 'http://micommerce.mx';
