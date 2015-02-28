@@ -76,9 +76,9 @@ class CfdiBase {
         $xsltFile = $xlst_path;
         $xmlFile = $xml_pad;
 
-        $xslt = new XSLTProcessor();
-        $xsl = new DOMDocument();
-        $xml = new DOMDocument();
+        $xslt = new \XSLTProcessor();
+        $xsl = new \DOMDocument();
+        $xml = new \DOMDocument();
 
         $xsl->load( $xsltFile, LIBXML_NOCDATA);
         $xml->load( $xmlFile, LIBXML_NOCDATA );
