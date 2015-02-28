@@ -25,14 +25,20 @@ class Cfdi{
     protected $version = "3.2";
 
     public function __construct(){
-        $url_cer = app_path()."/config/packages/raalveco/ciberfactura/".Config::get('packages/raalveco/ciberfactura/config.cer');
+        if(Config::get('packages/raalveco/ciberfactura/config.production')){
+            $url_cer = app_path()."/config/packages/raalveco/ciberfactura/".Config::get('packages/raalveco/ciberfactura/config.cer');
+            $url_key = app_path()."/config/packages/raalveco/ciberfactura/".Config::get('packages/raalveco/ciberfactura/config.key');
+            $clave_privada = Config::get('packages/raalveco/ciberfactura/config.clave_privada');
+        }
+        else{
+            $url_cer = app_path()."/config/packages/raalveco/ciberfactura/goya780416gm0_1210221537s.cer";
+            $url_key = app_path()."/config/packages/raalveco/ciberfactura/goya780416gm0_1210221537s.key";
+            $clave_privada = "12345678a";
+        }
 
         $this->noCertificado = CfdiBase::getSerialFromCertificate( $url_cer );
         $this->certificado = CfdiBase::getCertificate( $url_cer, false );
-
-        $url_key = app_path()."/config/packages/raalveco/ciberfactura/".Config::get('packages/raalveco/ciberfactura/config.key');
-
-        $this->key = CfdiBase::getPrivateKey($url_key, Config::get('packages/raalveco/ciberfactura/config.clave_privada'));
+        $this->key = CfdiBase::getPrivateKey($url_key, $clave_privada);
     }
 
     public function cargarFactura($cfdi){
