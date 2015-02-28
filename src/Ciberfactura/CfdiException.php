@@ -1,4 +1,4 @@
 <?php
-    class CFDIException extends Exception{
+    class CfdiException extends Exception{
 
     }

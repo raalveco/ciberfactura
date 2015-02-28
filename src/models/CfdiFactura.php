@@ -94,7 +94,7 @@ class CfdiFactura extends Model{
         $regimen->save();
     }
 
-    public function addSucursal($rfc, $nombre="", $calle="", $exterior="", $interior="", $colonia="", $localidad="", $municipio="", $estado="", $pais="", $cp=""){
+    public function addSucursal($calle="", $exterior="", $interior="", $colonia="", $localidad="", $municipio="", $estado="", $pais="", $cp=""){
         $this->save();
 
         if(CfdiSucursal::whereRaw("cfdi_id = $this->id")->count() > 0){
