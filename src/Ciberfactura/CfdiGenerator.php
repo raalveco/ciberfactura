@@ -20,11 +20,11 @@
             $comprobante->agregarAtributo("fecha", date("Y-m-d")."T".date("H:i:s"));
 
             $comprobante->agregarAtributo("formaDePago", "PAGO EN UNA SOLA EXHIBICION");
-            $comprobante->agregarAtributo("tipoDeComprobante", strtolower($cfdi->tipo_comprobante));
+            $comprobante->agregarAtributo("tipoDeComprobante", strtolower($cfdi->tipoDeComprobante));
             $comprobante->agregarAtributo("total", $cfdi->total);
             $comprobante->agregarAtributo("subTotal", $cfdi->subtotal);
             $comprobante->agregarAtributo("LugarExpedicion", "MEXICO");
-            $comprobante->agregarAtributo("metodoDePago", $cfdi->metodo_pago);
+            $comprobante->agregarAtributo("metodoDePago", $cfdi->metodoPago);
 
             $cfdi_emisor = $cfdi->emisor();
 
@@ -37,26 +37,26 @@
             //Emisor - Domicilio Fiscal
             $domicilioFiscal = new Nodo("cfdi:DomicilioFiscal");
             $domicilioFiscal->agregarAtributo("calle", $cfdi_emisor->calle);
-            $domicilioFiscal->agregarAtributo("noExterior", $cfdi_emisor->exterior);
-            if($cfdi_emisor->interior) $domicilioFiscal->agregarAtributo("noInterior", $cfdi_emisor->interior);
+            $domicilioFiscal->agregarAtributo("noExterior", $cfdi_emisor->noExterior);
+            if($cfdi_emisor->interior) $domicilioFiscal->agregarAtributo("noInterior", $cfdi_emisor->noInterior);
             $domicilioFiscal->agregarAtributo("colonia", $cfdi_emisor->colonia);
             $domicilioFiscal->agregarAtributo("municipio", $cfdi_emisor->municipio);
             $domicilioFiscal->agregarAtributo("estado", $cfdi_emisor->estado);
             $domicilioFiscal->agregarAtributo("pais", $cfdi_emisor->pais);
-            $domicilioFiscal->agregarAtributo("codigoPostal", $cfdi_emisor->cpostal);
+            $domicilioFiscal->agregarAtributo("codigoPostal", $cfdi_emisor->codigoPostal);
             $emisor->agregarNodo($domicilioFiscal);
 
             //Emisor - Expedido En
             //Si hay sucursales, sacar datos de la sucursal, sino salen del contribuyente
             $expedioEn = new Nodo("cfdi:ExpedidoEn");
             $expedioEn->agregarAtributo("calle", $cfdi_emisor->calle);
-            $expedioEn->agregarAtributo("noExterior", $cfdi_emisor->exterior);
-            if($cfdi_emisor->interior) $expedioEn->agregarAtributo("noInterior", $cfdi_emisor->interior);
+            $expedioEn->agregarAtributo("noExterior", $cfdi_emisor->noExterior);
+            if($cfdi_emisor->interior) $expedioEn->agregarAtributo("noInterior", $cfdi_emisor->noInterior);
             $expedioEn->agregarAtributo("colonia", $cfdi_emisor->colonia);
             $expedioEn->agregarAtributo("municipio", $cfdi_emisor->municipio);
             $expedioEn->agregarAtributo("estado", $cfdi_emisor->estado);
             $expedioEn->agregarAtributo("pais", $cfdi_emisor->pais);
-            $expedioEn->agregarAtributo("codigoPostal", $cfdi_emisor->cpostal);
+            $expedioEn->agregarAtributo("codigoPostal", $cfdi_emisor->codigoPostal);
             $emisor->agregarNodo($expedioEn);
 
             $cfdi_regimen = $cfdi->regimen();
@@ -77,13 +77,13 @@
             //Receptor - Domicilio Fiscal
             $domicilio = new Nodo("cfdi:Domicilio");
             $domicilio->agregarAtributo("calle", $cfdi_receptor->calle);
-            $domicilio->agregarAtributo("noExterior", $cfdi_receptor->exterior);
-            if($cfdi_receptor->interior) $domicilio->agregarAtributo("noInterior", $cfdi_receptor->interior);
+            $domicilio->agregarAtributo("noExterior", $cfdi_receptor->noExterior);
+            if($cfdi_receptor->interior) $domicilio->agregarAtributo("noInterior", $cfdi_receptor->noInterior);
             $domicilio->agregarAtributo("colonia", $cfdi_receptor->colonia);
             $domicilio->agregarAtributo("municipio", $cfdi_receptor->municipio);
             $domicilio->agregarAtributo("estado", $cfdi_receptor->estado);
             $domicilio->agregarAtributo("pais", $cfdi_receptor->pais);
-            $domicilio->agregarAtributo("codigoPostal", $cfdi_receptor->cpostal);
+            $domicilio->agregarAtributo("codigoPostal", $cfdi_receptor->codigoPostal);
             $receptor->agregarNodo($domicilio);
 
             $cfdi_conceptos = $cfdi->conceptos();
@@ -96,7 +96,7 @@
                 $concepto->agregarAtributo("cantidad", $cfdi_concepto->cantidad);
                 $concepto->agregarAtributo("unidad", $cfdi_concepto->unidad);
                 $concepto->agregarAtributo("descripcion", $cfdi_concepto->descripcion);
-                $concepto->agregarAtributo("valorUnitario", $cfdi_concepto->precio_unitario);
+                $concepto->agregarAtributo("valorUnitario", $cfdi_concepto->valorUnitario);
                 $concepto->agregarAtributo("importe", $cfdi_concepto->importe);
                 $conceptos->agregarNodo($concepto);
             }
@@ -113,7 +113,7 @@
             $retenidos = new Nodo("cfdi:Retenidos");
 
             if($cfdi_impuestos) foreach($cfdi_impuestos as $cfdi_impuesto){
-                if($cfdi_impuesto->tipo == "TRASLADADO"){
+                if(strtoupper($cfdi_impuesto->tipo) == "TRASLADADO"){
                     $total_trasladados += $cfdi_impuesto->importe;
 
                     $traslado = new Nodo("cfdi:Traslado");

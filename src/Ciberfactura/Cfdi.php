@@ -30,10 +30,10 @@ class Cfdi{
         $this->certificado = CfdiBase::getCertificate( $url_cer, false );
     }
 
-    public function loadCfdi($cfdi_id){
-        $this->cfdi = CfdiFactura::find($cfdi_id);
+    public function loadCfdi($cfdi){
+        $this->cfdi = $cfdi;
 
-        $this->xml = new XmlGenerator($this->cfdi);
+        $this->xml = new CfdiGenerator($this->cfdi);
 
         if(!file_exists(public_path()."/temp")){
             mkdir(public_path()."/temp");
