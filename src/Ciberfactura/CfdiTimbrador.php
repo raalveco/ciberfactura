@@ -28,7 +28,7 @@
                 $this->password = "TEST";
             }
 
-            $this->cliente = new nusoap_client($this->url,'soap');
+            $this->cliente = new \nusoap_client($this->url,'soap');
             $this->cliente->soap_defencoding = "UTF-8";
             $this->cliente->decode_utf8 = false;
 
