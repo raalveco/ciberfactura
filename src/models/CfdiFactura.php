@@ -4,12 +4,8 @@ use \Illuminate\Database\Eloquent\Model;
 class CfdiFactura extends Model{
     protected $table = "cfdi_facturas";
 
-    public function emisor($rfc = false, $nombre="", $calle="", $exterior="", $interior="", $colonia="", $localidad="", $municipio="", $estado="", $pais="", $cp=""){
+    public function addEmisor($rfc, $nombre="", $calle="", $exterior="", $interior="", $colonia="", $localidad="", $municipio="", $estado="", $pais="", $cp=""){
         $this->save();
-
-        if($rfc === false){
-            return CfdiEmisor::whereRaw("cfdi_id = $this->id")->first();
-        }
 
         if(CfdiEmisor::whereRaw("cfdi_id = $this->id")->count() > 0){
             $emisor = CfdiEmisor::whereRaw("cfdi_id = $this->id")->first();
@@ -36,12 +32,8 @@ class CfdiFactura extends Model{
         return $emisor;
     }
 
-    public function receptor($rfc = false, $nombre="", $calle="", $exterior="", $interior="", $colonia="", $localidad="", $municipio="", $estado="", $pais="", $cp=""){
+    public function addReceptor($rfc, $nombre="", $calle="", $exterior="", $interior="", $colonia="", $localidad="", $municipio="", $estado="", $pais="", $cp=""){
         $this->save();
-
-        if($rfc === false){
-            return CfdiReceptor::whereRaw("cfdi_id = $this->id")->first();
-        }
 
         if(CfdiReceptor::whereRaw("cfdi_id = $this->id")->count() > 0){
             $receptor = CfdiReceptor::whereRaw("cfdi_id = $this->id")->first();
@@ -66,5 +58,67 @@ class CfdiFactura extends Model{
         $receptor->save();
 
         return $receptor;
+    }
+
+    public function addConcepto($cantidad, $unidad, $concepto, $precio, $importe){
+        $concepto = new CfdiConcepto();
+
+        $concepto->cfdi_id = $this->id;
+        $concepto->cantidad = $cantidad;
+        $concepto->unidad = $unidad;
+        $concepto->descripcion = $concepto;
+        $concepto->valorUnitario = $precio;
+        $concepto->importe = $importe;
+
+        $concepto->save();
+    }
+
+    public function addImpuesto($tipo, $impuesto, $tasa, $importe){
+        $impuesto = new CfdiImpuesto();
+
+        $impuesto->cfdi_id = $this->id;
+        $impuesto->tipo = $tipo;
+        $impuesto->impuesto = $impuesto;
+        $impuesto->tasa = $tasa;
+        $impuesto->importe = $importe;
+
+        $impuesto->save();
+    }
+
+    public function addRegimen($regimen){
+        $regimen = new CfdiRegimen();
+
+        $regimen->cfdi_id = $this->id;
+        $regimen->regimen = $regimen;
+
+        $regimen->save();
+    }
+
+    public function emisor(){
+        return CfdiEmisor::whereRaw("cfdi_id = $this->id")->first();
+    }
+
+    public function receptor(){
+        return CfdiReceptor::whereRaw("cfdi_id = $this->id")->first();
+    }
+
+    public function conceptos(){
+        return CfdiConcepto::whereRaw("cfdi_id = $this->id")->get();
+    }
+
+    public function impuestos(){
+        return CfdiImpuesto::whereRaw("cfdi_id = $this->id")->get();
+    }
+
+    public function regimenes(){
+        return CfdiRegimen::whereRaw("cfdi_id = $this->id")->get();
+    }
+
+    public function sucursal(){
+        return CfdiSucursal::whereRaw("cfdi_id = $this->id")->first();
+    }
+
+    public function complemento(){
+        return CfdiComplemento::whereRaw("cfdi_id = $this->id")->first();
     }
 }
