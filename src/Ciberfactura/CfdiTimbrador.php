@@ -5,20 +5,27 @@
         private $namespace = 'http://micommerce.mx';
 
         //TESTING
-        //private $url = 'http://app.facturadorelectronico.com/pruebastimbradofe/timbrado.asmx?WSDL';
-        //private $id_usuario_global = 1; //idusuario global.
-        //private $usuario = "test";
-        //private $password = "TEST";
-
-        //PRODUCTION
-        private $url = 'https://cfdi.facturadorelectronico.com/wstimbrado/timbrado.asmx?WSDL';
+        private $url = 'http://app.facturadorelectronico.com/pruebastimbradofe/timbrado.asmx?WSDL';
         private $id_usuario_global = 1; //idusuario global.
-        private $usuario = "RamLozcTrx";
-        private $password = "VrGY3Brad";
+        private $usuario = "test";
+        private $password = "TEST";
 
         private $cliente = null;
 
         public function __construct(){
+            if(Config::get('packages/raalveco/ciberfactura/config.production')){
+                //$this->url = 'https://cfdi.facturadorelectronico.com/wstimbrado/timbrado.asmx?WSDL';
+                //$this->id_usuario_global = 1; //idusuario global.
+                //$this->usuario = "RamLozcTrx";
+                //$this->password = "VrGY3Brad";
+            }
+            else{
+                $this->url = 'http://app.facturadorelectronico.com/pruebastimbradofe/timbrado.asmx?WSDL';
+                $this->id_usuario_global = 1; //idusuario global.
+                $this->usuario = "test";
+                $this->password = "TEST";
+            }
+
             $this->cliente = new nusoap_client($this->url,'soap');
             $this->cliente->soap_defencoding = "UTF-8";
             $this->cliente->decode_utf8 = false;
@@ -29,11 +36,11 @@
         }
 
         public static function timbrado($xml_base){
-            $facturador = new WsFacturadorElectronico();
+            $facturador = new CfdiTimbrador();
 
             if(file_exists($xml_base)){
 
-                $dom = new DOMDocument();
+                $dom = new \DOMDocument();
                 $dom->load($xml_base);
 
                 $xml = trim($dom->saveXML());
@@ -54,7 +61,7 @@
         }
 
         public static function cancelacion($xml){
-            $facturador = new WsFacturadorElectronico();
+            $facturador = new CfdiTimbrador();
 
             //Cancelacion
             $parametros = array(
@@ -69,7 +76,7 @@
         }
 
         public static function cancelacionPFX($rfc, $uuid, $pfx, $pfx_pass){
-            $facturador = new WsFacturadorElectronico();
+            $facturador = new CfdiTimbrador();
 
             $rawFile = fread(fopen($pfx, "r"), filesize($pfx));
             $pfx_base64 = base64_encode($rawFile);

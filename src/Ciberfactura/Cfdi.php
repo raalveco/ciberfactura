@@ -63,30 +63,12 @@ class Cfdi{
         return $this->sello;
     }
 
-    public function sellar2(){
-        $contribuyente = $this->cfdi->emisor();
-        $certificado = Certificado::buscar("numero_serie = '$this->cfdi->no_certificado'");
-
-        $contribuyente_rfc = $contribuyente->rfc;
-        $contribuyente_no_certificado = $certificado->numero_serie;
-        $contribuyente_clave_privada = $certificado->clave_privada;
-
-        $noCertificado = SimpleCFDI::getSerialFromCertificate( APP_PATH.'public/cfdi/'.$contribuyente_rfc.'/certificado/'.$contribuyente_no_certificado.'.cer' );
-        $certificado = SimpleCFDI::getCertificate( APP_PATH.'public/cfdi/'.$contribuyente_rfc.'/certificado/'.$contribuyente_no_certificado.'.cer', false );
-
-        $sello = SimpleCFDI::signData(SimpleCFDI::getPrivateKey(APP_PATH.'public/cfdi/'.$contribuyente_rfc.'/certificado/'.$contribuyente_no_certificado.'.key', $contribuyente_clave_privada), $this->cadenaOriginal);
-
-        $this->xml->sellar($this->sello, $this->noCertificado, $this->certificado);
-
-        $this->xml->saveFile($this->tmp_file);
-    }
-
     public function timbrar($url = false){
         if(!$url){
-            $response = WsFacturadorElectronico::timbrado($this->tmp_file);
+            $response = CfdiTimbrador::timbrado($this->tmp_file);
         }
         else{
-            $response = WsFacturadorElectronico::timbrado($url);
+            $response = CfdiTimbrador::timbrado($url);
         }
 
         if($response["obtenerTimbradoResult"]["timbre"]["!esValido"] == true){
