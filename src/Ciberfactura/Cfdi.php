@@ -32,7 +32,7 @@ class Cfdi{
 
         $url_key = app_path()."/config/packages/raalveco/ciberfactura/".Config::get('packages/raalveco/ciberfactura/config.key');
 
-        $this->key = CfdiBase::getPrivateKey($url_key, Config::get('packages/raalveco/ciberfactura/config.clave_privada');
+        $this->key = CfdiBase::getPrivateKey($url_key, Config::get('packages/raalveco/ciberfactura/config.clave_privada'));
     }
 
     public function cargarFactura($cfdi){
