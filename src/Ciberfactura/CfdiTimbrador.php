@@ -16,10 +16,10 @@
 
         public function __construct(){
             if(Config::get('packages/raalveco/ciberfactura/config.production')){
-                //$this->url = 'https://cfdi.facturadorelectronico.com/wstimbrado/timbrado.asmx?WSDL';
-                //$this->id_usuario_global = 1; //idusuario global.
-                //$this->usuario = "RamLozcTrx";
-                //$this->password = "VrGY3Brad";
+                $this->url = 'https://cfdi.facturadorelectronico.com/wstimbrado/timbrado.asmx?WSDL';
+                $this->id_usuario_global = 1; //idusuario global.
+                $this->usuario = "RamLozcTrx";
+                $this->password = "VrGY3Brad";
             }
             else{
                 $this->url = 'http://app.facturadorelectronico.com/pruebastimbradofe/timbrado.asmx?WSDL';
