@@ -61,12 +61,13 @@
             $expedioEn->agregarAtributo("codigoPostal", $cfdi_emisor->codigoPostal);
             $emisor->agregarNodo($expedioEn);
 
-            $cfdi_regimen = $cfdi->regimen();
-
-            //Emisor - Regimen Fiscal
-            $regimenFiscal = new Nodo("cfdi:RegimenFiscal");
-            $regimenFiscal->agregarAtributo("Regimen", $cfdi_regimen->regimen);
-            $emisor->agregarNodo($regimenFiscal);
+            //Emisor - Regimenes Fiscales
+            $cfdi_regimenes = $cfdi->regimenes();
+            if($cfdi_regimenes) foreach($cfdi_regimenes as $cfdi_regimen){
+                $regimenFiscal = new Nodo("cfdi:RegimenFiscal");
+                $regimenFiscal->agregarAtributo("Regimen", $cfdi_regimen->regimen);
+                $emisor->agregarNodo($regimenFiscal);
+            }
 
             $cfdi_receptor = $cfdi->receptor();
 

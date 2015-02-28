@@ -24,7 +24,7 @@ class Cfdi{
     protected $version = "3.2";
 
     public function __construct(){
-        $url_cer = app_path()."/".Config::get('packages/raalveco/ciberfactura/config.cer');
+        $url_cer = app_path()."/packages/raalveco/ciberfactura/".Config::get('packages/raalveco/ciberfactura/config.cer');
 
         $this->noCertificado = CfdiBase::getSerialFromCertificate( $url_cer );
         $this->certificado = CfdiBase::getCertificate( $url_cer, false );
@@ -42,7 +42,7 @@ class Cfdi{
         $this->tmp_file = public_path()."/temp/".sha1(date("Y-m-d H:i:s".rand(0,100000))).".xml";
         $this->xml->saveFile($this->tmp_file);
 
-        $this->cadenaOriginal = CfdiBase::getCadenaOriginal($this->tmp_file, APP_PATH.'cadenaoriginal_3_2.xslt');
+        $this->cadenaOriginal = CfdiBase::getCadenaOriginal($this->tmp_file, app_path().'/packages/raalveco/ciberfactura/cadenaoriginal_3_2.xslt');
     }
 
     public function sellar2(){
@@ -76,16 +76,16 @@ class Cfdi{
         $noCertificado = SimpleCFDI::getSerialFromCertificate( APP_PATH.'public/cfdi/'.$contribuyente_rfc.'/certificado/'.$contribuyente_no_certificado.'.cer' );
 
         if(!$noCertificado){
-            throw new CFDIException("No se encontro el número del certificado.");
+            throw new CfdiException("No se encontro el número del certificado.");
         }
 
-        $certificado = SimpleCFDI::getCertificate( APP_PATH.'public/cfdi/'.$contribuyente_rfc.'/certificado/'.$contribuyente_no_certificado.'.cer', false );
+        $certificado = CfdiBase::getCertificate( APP_PATH.'public/cfdi/'.$contribuyente_rfc.'/certificado/'.$contribuyente_no_certificado.'.cer', false );
 
         if(!$certificado){
-            throw new CFDIException("No se encontro el el certificado.");
+            throw new CfdiException("No se encontro el el certificado.");
         }
 
-        $sello = SimpleCFDI::signData(SimpleCFDI::getPrivateKey(APP_PATH.'public/cfdi/'.$contribuyente_rfc.'/certificado/'.$contribuyente_no_certificado.'.key', $contribuyente_clave_privada), $this->cadenaOriginal);
+        $sello = CfdiBase::signData(CfdiBase::getPrivateKey(APP_PATH.'public/cfdi/'.$contribuyente_rfc.'/certificado/'.$contribuyente_no_certificado.'.key', $contribuyente_clave_privada), $this->cadenaOriginal);
 
         if(!$sello){
             throw new CFDIException("No se pudo sellar la cadena original, no se encontro el certificado (.key) o la clave privada no es valida.");

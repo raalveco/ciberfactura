@@ -159,6 +159,10 @@ class CfdiFactura extends Model{
         return CfdiImpuesto::whereRaw("cfdi_id = $this->id")->get();
     }
 
+    public function regimen(){
+        return CfdiRegimen::whereRaw("cfdi_id = $this->id")->first();
+    }
+
     public function regimenes(){
         return CfdiRegimen::whereRaw("cfdi_id = $this->id")->get();
     }

@@ -12,8 +12,8 @@
 
 return array(
 
-	'cer' => 'certificado/20001000000200000216.cer',
-    'key' => 'certificado/20001000000200000216.key',
-    'logo' => 'logotipo/logotipo.png',
+	'cer' => '20001000000200000216.cer',
+    'key' => '20001000000200000216.key',
+    'logo' => 'logotipo.png',
 
 );
