@@ -42,10 +42,14 @@
 
             if(file_exists($xml_base)){
 
+                echo $xml_base; echo "<br><br>";
+
                 $dom = new \DOMDocument();
                 $dom->load($xml_base);
 
                 $xml = trim($dom->saveXML());
+
+                print_r($xml); echo "<br><br>";
 
                 //obtenerTimbrado
                 $parametros = array(
@@ -54,7 +58,11 @@
                     'password' => $facturador->password
                 );
 
+                print_r($parametros); echo "<br><br>";
+
                 $resultado = $facturador->cliente->call('obtenerTimbrado',$parametros,$facturador->namespace);
+
+                print_r($resultado); echo "<br><br>";
 
                 return $resultado;
             }
