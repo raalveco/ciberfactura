@@ -60,13 +60,13 @@ class CfdiFactura extends Model{
         return $receptor;
     }
 
-    public function addConcepto($cantidad, $unidad, $concepto, $precio, $importe){
+    public function addConcepto($cantidad, $unidad, $descripcion, $precio, $importe){
         $concepto = new CfdiConcepto();
 
         $concepto->cfdi_id = $this->id;
         $concepto->cantidad = $cantidad;
         $concepto->unidad = $unidad;
-        $concepto->descripcion = $concepto;
+        $concepto->descripcion = $descripcion;
         $concepto->valorUnitario = $precio;
         $concepto->importe = $importe;
 
