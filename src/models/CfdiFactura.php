@@ -73,23 +73,23 @@ class CfdiFactura extends Model{
         $concepto->save();
     }
 
-    public function addImpuesto($tipo, $impuesto, $tasa, $importe){
+    public function addImpuesto($tipo, $impuesto_name, $tasa, $importe){
         $impuesto = new CfdiImpuesto();
 
         $impuesto->cfdi_id = $this->id;
         $impuesto->tipo = $tipo;
-        $impuesto->impuesto = $impuesto;
+        $impuesto->impuesto = $impuesto_name;
         $impuesto->tasa = $tasa;
         $impuesto->importe = $importe;
 
         $impuesto->save();
     }
 
-    public function addRegimen($regimen){
+    public function addRegimen($regimen_name){
         $regimen = new CfdiRegimen();
 
         $regimen->cfdi_id = $this->id;
-        $regimen->regimen = $regimen;
+        $regimen->regimen = $regimen_name;
 
         $regimen->save();
     }
