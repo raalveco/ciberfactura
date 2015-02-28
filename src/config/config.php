@@ -12,8 +12,9 @@
 
 return array(
 
-	'cer' => '20001000000200000216.cer',
-    'key' => '20001000000200000216.key',
+	'cer' => '00001000000302642746.cer',
+    'key' => '00001000000302642746.key',
+    'clave_privada' => 'Ramiro07',
     'logo' => 'logotipo.png',
 
 );
