@@ -24,7 +24,7 @@ class Cfdi{
     protected $version = "3.2";
 
     public function __construct(){
-        $url_cer = app_path()."/packages/raalveco/ciberfactura/".Config::get('packages/raalveco/ciberfactura/config.cer');
+        $url_cer = app_path()."/config/packages/raalveco/ciberfactura/".Config::get('packages/raalveco/ciberfactura/config.cer');
 
         $this->noCertificado = CfdiBase::getSerialFromCertificate( $url_cer );
         $this->certificado = CfdiBase::getCertificate( $url_cer, false );
@@ -42,7 +42,7 @@ class Cfdi{
         $this->tmp_file = public_path()."/temp/".sha1(date("Y-m-d H:i:s".rand(0,100000))).".xml";
         $this->xml->saveFile($this->tmp_file);
 
-        $this->cadenaOriginal = CfdiBase::getOriginalString($this->tmp_file, app_path().'/packages/raalveco/ciberfactura/cadenaoriginal_3_2.xslt');
+        $this->cadenaOriginal = CfdiBase::getOriginalString($this->tmp_file, app_path().'/config/packages/raalveco/ciberfactura/cadenaoriginal_3_2.xslt');
     }
 
     public function sellar2(){
