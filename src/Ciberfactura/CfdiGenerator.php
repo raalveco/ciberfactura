@@ -182,7 +182,7 @@
         }
 
         public function getXML(){
-            $this->xml = new DOMDocument('1.0' , 'UTF-8');
+            $this->xml = new \DOMDocument('1.0' , 'UTF-8');
             $this->xml->appendChild($this->xmlizar($this->cfdi));
             $this->xml->formatOutput = true;
             $xml = $this->xml->saveXML();
@@ -191,7 +191,7 @@
         }
 
         public function saveFile($file){
-            $this->xml = new DOMDocument('1.0' , 'UTF-8');
+            $this->xml = new \DOMDocument('1.0' , 'UTF-8');
             $this->xml->appendChild($this->xmlizar($this->cfdi));
             $this->xml->formatOutput = true;
             $this->xml->save($file);
