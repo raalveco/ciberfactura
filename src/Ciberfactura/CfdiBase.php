@@ -73,8 +73,8 @@ class CfdiBase {
     }
 
     public static function getOriginalString($xml_pad, $xlst_path){
-        $xsltFile = $xlst_path;
-        $xmlFile = $xml_pad;
+        $xsltFile = str_replace('"','', $xlst_path);
+        $xmlFile = str_replace('"','', $xml_pad);
 
         $xslt = new \XSLTProcessor();
         $xsl = new \DOMDocument();
