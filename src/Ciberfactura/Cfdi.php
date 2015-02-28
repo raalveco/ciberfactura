@@ -42,7 +42,7 @@ class Cfdi{
         $this->tmp_file = public_path()."/temp/".sha1(date("Y-m-d H:i:s".rand(0,100000))).".xml";
         $this->xml->saveFile($this->tmp_file);
 
-        $this->cadenaOriginal = CfdiBase::getCadenaOriginal($this->tmp_file, app_path().'/packages/raalveco/ciberfactura/cadenaoriginal_3_2.xslt');
+        $this->cadenaOriginal = CfdiBase::getOriginalString($this->tmp_file, app_path().'/packages/raalveco/ciberfactura/cadenaoriginal_3_2.xslt');
     }
 
     public function sellar2(){
