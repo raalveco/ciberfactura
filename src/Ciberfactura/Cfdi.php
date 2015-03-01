@@ -72,6 +72,8 @@ class Cfdi{
     public function timbrar($url = false){
         $response = CfdiTimbrador::timbrado($this->xml->getXML());
 
+        echo "Response: "; print_r($response);  echo "<br><br>";
+
         if($response["obtenerTimbradoResult"]["timbre"]["!esValido"] == true){
             $timbre = $response["obtenerTimbradoResult"]["timbre"]["TimbreFiscalDigital"];
 

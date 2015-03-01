@@ -62,11 +62,13 @@
                 'password' => $facturador->password
             );
 
+            print_r($parametros); echo "<br><br>";
+
             $resultado = $facturador->cliente->call('cancelarComprobante',$parametros,$facturador->namespace);
 
             print_r($resultado);
 
-            return $resultado;
+            return $resultado; echo "<br><br>";
         }
 
         public static function cancelacionPFX($rfc, $uuid, $pfx, $pfx_pass){
