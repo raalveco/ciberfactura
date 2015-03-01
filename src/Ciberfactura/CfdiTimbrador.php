@@ -40,12 +40,16 @@
         public static function timbrado($xml){
             $facturador = new CfdiTimbrador();
 
+            $xml = trim(str_replace("&#xD","",str_replace("&#xA","",str_replace("\n","",str_replace("\r","",$xml)))));
+
             //obtenerTimbrado
             $parametros = array(
-                'CFDIcliente' => trim(str_replace("&#xD","",str_replace("&#xA","",str_replace("\n","",str_replace("\r","",$xml))))),
+                'CFDIcliente' => $xml,
                 'Usuario' => $facturador->usuario,
                 'password' => $facturador->password
             );
+
+            echo "<br><br>"; print_r($xml); echo "<br><br>";
 
             $resultado = $facturador->cliente->call('obtenerTimbrado',$parametros,$facturador->namespace);
 
