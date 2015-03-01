@@ -31,8 +31,8 @@ class Cfdi{
             $clave_privada = Config::get('packages/raalveco/ciberfactura/config.clave_privada');
         }
         else{
-            $url_cer = app_path()."/config/packages/raalveco/ciberfactura/00001000000302642746.cer";
-            $url_key = app_path()."/config/packages/raalveco/ciberfactura/00001000000302642746.key";
+            $url_cer = app_path()."/config/packages/raalveco/ciberfactura/20001000000200000216.cer";
+            $url_key = app_path()."/config/packages/raalveco/ciberfactura/20001000000200000216.key";
             $clave_privada = "12345678a";
         }
 
