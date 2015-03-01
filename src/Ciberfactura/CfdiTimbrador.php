@@ -42,7 +42,7 @@
 
             //obtenerTimbrado
             $parametros = array(
-                'CFDIcliente' => trim(str_replace("&#xD","",str_replace("&#xA","",$xml))),
+                'CFDIcliente' => trim(str_replace("&#xD","",str_replace("&#xA","",str_replace("\n","",str_replace("\r","",$xml))))),
                 'Usuario' => $facturador->usuario,
                 'password' => $facturador->password
             );
