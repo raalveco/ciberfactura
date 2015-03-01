@@ -40,7 +40,7 @@
         public static function timbrado($xml){
             $facturador = new CfdiTimbrador();
 
-            $xml = trim(str_replace("&#xD","",str_replace("&#xA","",str_replace("\n","",str_replace("\r","",$xml)))));
+            $xml = trim(str_replace("&#xD","",str_replace("&#xA","",str_replace("\n","",str_replace("\r","",str_replace("\t","",$xml))))));
 
             //obtenerTimbrado
             $parametros = array(
