@@ -51,7 +51,7 @@ class Cfdi{
         }
 
         $this->tmp_file = public_path()."/temp/".sha1(date("Y-m-d H:i:s".rand(0,100000))).".xml";
-        $this->xml->saveFile($this->tmp_file);
+        $this->xml->saveFile($this->tmp_file, false);
 
         $this->cadenaOriginal = CfdiBase::getOriginalString($this->tmp_file, app_path().'/config/packages/raalveco/ciberfactura/cadenaoriginal_3_2.xslt');
 
