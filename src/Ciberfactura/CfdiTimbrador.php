@@ -64,6 +64,8 @@
 
             $resultado = $facturador->cliente->call('cancelarComprobante',$parametros,$facturador->namespace);
 
+            print_r($resultado);
+
             return $resultado;
         }
 
