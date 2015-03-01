@@ -40,6 +40,8 @@
         public static function timbrado($xml){
             $facturador = new CfdiTimbrador();
 
+            $xml = preg_replace("/[\r\n]/", '', $xml);
+
             //obtenerTimbrado
             $parametros = array(
                 'CFDIcliente' => $xml,

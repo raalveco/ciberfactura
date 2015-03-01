@@ -70,7 +70,7 @@ class Cfdi{
     }
 
     public function timbrar(){
-        $response = CfdiTimbrador::timbrado($this->xml->getXML());
+        $response = CfdiTimbrador::timbrado($this->xml->getXML(false));
 
         echo "Response: "; print_r($response);  echo "<br><br>";
 

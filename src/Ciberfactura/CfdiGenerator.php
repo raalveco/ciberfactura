@@ -181,19 +181,19 @@
             $this->cfdi->agregarAtributo("certificado", $certificado);
         }
 
-        public function getXML(){
+        public function getXML($format = true){
             $this->xml = new \DOMDocument('1.0' , 'UTF-8');
             $this->xml->appendChild($this->xmlizar($this->cfdi));
-            $this->xml->formatOutput = true;
+            $this->xml->formatOutput = $format;
             $xml = $this->xml->saveXML();
 
             return $xml;
         }
 
-        public function saveFile($file){
+        public function saveFile($file, $format = true){
             $this->xml = new \DOMDocument('1.0' , 'UTF-8');
             $this->xml->appendChild($this->xmlizar($this->cfdi));
-            $this->xml->formatOutput = true;
+            $this->xml->formatOutput = $format;
             $this->xml->save($file);
         }
 
