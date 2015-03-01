@@ -37,31 +37,21 @@
             }
         }
 
-        public static function timbrado($xml_base){
+        public static function timbrado($xml){
             $facturador = new CfdiTimbrador();
 
-            if(file_exists($xml_base)){
+            //obtenerTimbrado
+            $parametros = array(
+                'CFDIcliente' => trim(str_replace("&#xD","",str_replace("&#xA","",$xml))),
+                'Usuario' => $facturador->usuario,
+                'password' => $facturador->password
+            );
 
-                $dom = new \DOMDocument();
-                $dom->load($xml_base);
+            $resultado = $facturador->cliente->call('obtenerTimbrado',$parametros,$facturador->namespace);
 
-                $xml = trim($dom->saveXML());
+            print_r($resultado); echo "<br><br>";
 
-                //obtenerTimbrado
-                $parametros = array(
-                    'CFDIcliente' => trim(str_replace("&#xD","",str_replace("&#xA","",$xml))),
-                    'Usuario' => $facturador->usuario,
-                    'password' => $facturador->password
-                );
-
-                $resultado = $facturador->cliente->call('obtenerTimbrado',$parametros,$facturador->namespace);
-
-                print_r($resultado); echo "<br><br>";
-
-                return $resultado;
-            }
-
-            return false;
+            return $resultado;
         }
 
         public static function cancelacion($xml){
