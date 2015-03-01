@@ -47,7 +47,11 @@
                 'password' => $facturador->password
             );
 
+            print_r($parametros); echo "<br><br>";
+
             $resultado = $facturador->cliente->call('obtenerTimbrado',$parametros,$facturador->namespace);
+
+            print_r($resultado);
 
             return $resultado;
         }
@@ -62,11 +66,7 @@
                 'password' => $facturador->password
             );
 
-            print_r($parametros); echo "<br><br>";
-
             $resultado = $facturador->cliente->call('cancelarComprobante',$parametros,$facturador->namespace);
-
-            print_r($resultado);
 
             return $resultado; echo "<br><br>";
         }
