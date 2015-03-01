@@ -2,8 +2,8 @@
     namespace Ciberfactura;
 
     class CfdiGenerator{
-        private $xml;
-        private $cfdi;
+        public $xml;
+        public $cfdi;
 
         public function __construct($cfdi){
             $this->cfdi = $cfdi;
