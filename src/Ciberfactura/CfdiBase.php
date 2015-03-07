@@ -17,13 +17,13 @@ class CfdiBase {
 
     public function __construct(CfdiFactura $cfdi){
         if(Config::get('packages/raalveco/ciberfactura/config.production')){
-            $url_cer = app_path()."/config/packages/raalveco/ciberfactura/".Config::get('packages/raalveco/ciberfactura/config.cer');
-            $url_key = app_path()."/config/packages/raalveco/ciberfactura/".Config::get('packages/raalveco/ciberfactura/config.key');
+            $url_cer = app_path()."/config/packages/raalveco/ciberfactura/certificados/".Config::get('packages/raalveco/ciberfactura/config.cer');
+            $url_key = app_path()."/config/packages/raalveco/ciberfactura/certificados/".Config::get('packages/raalveco/ciberfactura/config.key');
             $clave_privada = Config::get('packages/raalveco/ciberfactura/config.clave_privada');
         }
         else{
-            $url_cer = app_path()."/config/packages/raalveco/ciberfactura/20001000000200000216.cer";
-            $url_key = app_path()."/config/packages/raalveco/ciberfactura/20001000000200000216.key";
+            $url_cer = app_path()."/config/packages/raalveco/ciberfactura/certificados/test/aad990814bp7_1210261233s.cer";
+            $url_key = app_path()."/config/packages/raalveco/ciberfactura/certificados/test/aad990814bp7_1210261233s.key";
             $clave_privada = "12345678a";
         }
 
