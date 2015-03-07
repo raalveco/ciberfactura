@@ -35,9 +35,9 @@
 
             }
             else{
-                $url_autentificar = "https://pruebascfdi.smartweb.com.mx/Autenticacion/wsAutenticacion.asmx?wsdl";
-                $url_timbrar = "https://pruebascfdi.smartweb.com.mx/Timbrado/wsTimbrado.asmx?wsdl";
-                $url_cancelar = "https://pruebascfdi.smartweb.com.mx/Autenticacion/wsAutenticacion.asmx?wsdl";
+                $url_autentificar = "http://pruebascfdi.smartweb.com.mx/Autenticacion/wsAutenticacion.asmx?wsdl";
+                $url_timbrar = "http://pruebascfdi.smartweb.com.mx/Timbrado/wsTimbrado.asmx?wsdl";
+                $url_cancelar = "http://pruebascfdi.smartweb.com.mx/Autenticacion/wsAutenticacion.asmx?wsdl";
 
                 $this->usuario = "demo";
                 $this->password = "123456789";
