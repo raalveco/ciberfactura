@@ -69,7 +69,8 @@
             print_r($parametros); echo "<br><br>";
             print_r($this->soap_autentificar); echo "<br><br>";
 
-            $this->token = $this->soap_autentificar->AutenticarBasico(array("usuario" => $this->usuario, "password" => $this->password));
+            $token = $this->soap_autentificar->AutenticarBasico(array("usuario" => $this->usuario, "password" => $this->password));
+            $this->token = $token->AutenticarBasicoResult;
         }
 
         public function timbrar($xml){
