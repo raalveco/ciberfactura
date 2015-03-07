@@ -48,7 +48,7 @@
                 $clave_privada = "12345678a";
             }
 
-            echo $url_autentificar;
+            echo $url_autentificar."<br>";
 
             $this->soap_autentificar = new \nusoap_client($url_autentificar,'soap');
             $this->soap_autentificar->soap_defencoding = "UTF-8";
@@ -73,7 +73,9 @@
                 )
             );
 
-            print_r($this->soap_autentificar);
+            echo "<br><br>";
+            print_r($parametros); echo "<br><br>";
+            print_r($this->soap_autentificar); echo "<br><br>";
 
             $this->token = $this->soap_autentificar->call('AutenticarBasico', $parametros, $this->$namespace);
         }
