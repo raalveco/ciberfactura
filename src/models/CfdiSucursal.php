@@ -1,4 +1,6 @@
 <?php
+namespace Ciberfactura;
+
 use \Illuminate\Database\Eloquent\Model;
 
 class CfdiSucursal extends Model{
