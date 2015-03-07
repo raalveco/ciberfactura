@@ -50,17 +50,9 @@
 
             echo $url_autentificar."<br>";
 
-            $this->soap_autentificar = new \nusoap_client($url_autentificar,'soap');
-            $this->soap_autentificar->soap_defencoding = "UTF-8";
-            $this->soap_autentificar->decode_utf8 = false;
-
-            $this->soap_timbrar = new \nusoap_client($url_timbrar,'soap');
-            $this->soap_timbrar->soap_defencoding = "UTF-8";
-            $this->soap_timbrar->decode_utf8 = false;
-
-            $this->soap_cancelar = new \nusoap_client($url_cancelar,'soap');
-            $this->soap_cancelar->soap_defencoding = "UTF-8";
-            $this->soap_cancelar->decode_utf8 = false;
+            $this->soap_autentificar = new SoapClient($url_autentificar, array("trace" => 1, "exception" => 0));
+            $this->soap_timbrar = new SoapClient($url_timbrar, array("trace" => 1, "exception" => 0));
+            $this->soap_cancelar = new SoapClient($url_cancelar, array("trace" => 1, "exception" => 0));
 
             $this->cer = base64_encode(file_get_contents($url_cer));
             $this->key = base64_encode(file_get_contents($url_key));
@@ -77,7 +69,7 @@
             print_r($parametros); echo "<br><br>";
             print_r($this->soap_autentificar); echo "<br><br>";
 
-            $this->token = $this->soap_autentificar->call('AutenticarBasico', $parametros, $this->$namespace);
+            $this->token = $this->soap_autentificar->AutenticarBasico(array("usuario" => $this->usuario, "password" => $this->password));
         }
 
         public function timbrar($xml){
@@ -87,7 +79,7 @@
                 'password' => $this->password
             );
 
-            $response = $this->soap_timbrar->call('TimbrarXML', $parametros, $this->$namespace);
+            $response = $this->soap_timbrar->TimbrarXML($parametros);
 
             return $response;
         }
@@ -102,7 +94,7 @@
                 'tokenAutenticacion' => $this->token
             );
 
-            $response = $this->soap_timbrar->call('TimbrarXML', $parametros, $this->$namespace);
+            $response = $this->soap_cancelar->cancelarCSD($parametros);
 
             return $response;
         }
