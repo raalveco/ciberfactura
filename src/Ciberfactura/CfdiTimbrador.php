@@ -50,9 +50,9 @@
 
             echo $url_autentificar."<br>";
 
-            $this->soap_autentificar = new SoapClient($url_autentificar, array("trace" => 1, "exception" => 0));
-            $this->soap_timbrar = new SoapClient($url_timbrar, array("trace" => 1, "exception" => 0));
-            $this->soap_cancelar = new SoapClient($url_cancelar, array("trace" => 1, "exception" => 0));
+            $this->soap_autentificar = new \SoapClient($url_autentificar, array("trace" => 1, "exception" => 0));
+            $this->soap_timbrar = new \SoapClient($url_timbrar, array("trace" => 1, "exception" => 0));
+            $this->soap_cancelar = new \SoapClient($url_cancelar, array("trace" => 1, "exception" => 0));
 
             $this->cer = base64_encode(file_get_contents($url_cer));
             $this->key = base64_encode(file_get_contents($url_key));
