@@ -29,9 +29,11 @@ class Cfdi extends CfdiBase{
     public function timbrar(){
         $timbrador = new CfdiTimbrador();
 
-        print_r($timbrador); echo "<br><br>";
-
         $response = $timbrador->timbrar($this->xml->getXML());
+
+        $timbre = simplexml_load_string($response);
+
+        $this->xml->timbrar($timbre);
 
         return $response;
     }
