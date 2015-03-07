@@ -31,7 +31,7 @@ class Cfdi extends CfdiBase{
 
         $response = $timbrador->timbrar($this->xml->getXML());
 
-        $timbre = simplexml_load_string($response);
+        $timbre = simplexml_load_string($response->TimbrarXMLResult);
 
         $this->xml->timbrar($timbre);
 
