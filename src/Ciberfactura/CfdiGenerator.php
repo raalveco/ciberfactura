@@ -25,7 +25,7 @@
             $comprobante->agregarAtributo("total", $cfdi->total);
             $comprobante->agregarAtributo("subTotal", $cfdi->subTotal);
             $comprobante->agregarAtributo("LugarExpedicion", "MÉXICO");
-            $comprobante->agregarAtributo("metodoPago", $cfdi->metodoPago ? $cfdi->metodoPago : "efectivo");
+            $comprobante->agregarAtributo("metodoDePago", $cfdi->metodoPago ? $cfdi->metodoPago : "efectivo");
             $comprobante->agregarAtributo("tipoDeComprobante", $cfdi->tipoDeComprobante ? $cfdi->tipoDeComprobante : "ingreso");
 
             $cfdi_emisor = $cfdi->emisor();
