@@ -49,6 +49,10 @@ class CfdiBase {
         $this->cfdi->save();
     }
 
+    public function xml(){
+        return $this->xml->getXML();
+    }
+
     public function uuid(){
         return $this->cfdi->uuid();
     }
@@ -62,7 +66,6 @@ class CfdiBase {
         $private = openssl_pkey_get_private(file_get_contents($archivo_key));
         openssl_sign($cadena_original, $firma, $private);
         $sello = base64_encode($firma);
-        echo "SELLO: ".$sello."<br><br>";
         return $sello;
     }
 
