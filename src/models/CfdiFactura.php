@@ -174,4 +174,8 @@ class CfdiFactura extends Model{
     public function complemento(){
         return CfdiComplemento::whereRaw("cfdi_id = $this->id")->first();
     }
+
+    public function uuid(){
+        return $this->complemento()->UUID;
+    }
 }

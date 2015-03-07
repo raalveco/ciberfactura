@@ -5,7 +5,7 @@
         public $xml;
         public $cfdi;
 
-        public function __construct($cfdi){
+        public function __construct(CfdiFactura $cfdi){
             $this->cfdi = $cfdi;
 
             //Comprobante

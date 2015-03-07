@@ -12,88 +12,9 @@ use CfdiSucursal;
 
 use Illuminate\Support\Facades\Config;
 
-class Cfdi{
-    public $xml;
-    public $cadenaOriginal;
-    public $sello;
-    public $key;
-    public $certificado;
-    public $noCertificado;
-    private $tmp_file;
-    private $cfdi;
-
-    protected $version = "3.2";
-
-    public function __construct(){
-        if(Config::get('packages/raalveco/ciberfactura/config.production')){
-            $url_cer = app_path()."/config/packages/raalveco/ciberfactura/".Config::get('packages/raalveco/ciberfactura/config.cer');
-            $url_key = app_path()."/config/packages/raalveco/ciberfactura/".Config::get('packages/raalveco/ciberfactura/config.key');
-            $clave_privada = Config::get('packages/raalveco/ciberfactura/config.clave_privada');
-        }
-        else{
-            $url_cer = app_path()."/config/packages/raalveco/ciberfactura/20001000000200000216.cer";
-            $url_key = app_path()."/config/packages/raalveco/ciberfactura/20001000000200000216.key";
-            $clave_privada = "12345678a";
-        }
-
-        $this->noCertificado = CfdiBase::getSerialFromCertificate( $url_cer );
-        $this->certificado = CfdiBase::getCertificate( $url_cer, false );
-        $this->key = CfdiBase::getPrivateKey($url_key, $clave_privada);
-    }
-
-    public function cargarFactura($cfdi){
-        $this->cfdi = $cfdi;
-
-        $this->xml = new CfdiGenerator($this->cfdi);
-
-        if(!file_exists(public_path()."/temp")){
-            mkdir(public_path()."/temp");
-        }
-
-        $this->tmp_file = public_path()."/temp/".sha1(date("Y-m-d H:i:s".rand(0,100000))).".xml";
-        $this->xml->saveFile($this->tmp_file, false);
-
-        $this->cadenaOriginal = CfdiBase::getOriginalString($this->tmp_file, app_path().'/config/packages/raalveco/ciberfactura/cadenaoriginal_3_2.xslt');
-
-        $this->cfdi->noCertificado = $this->noCertificado;
-        $this->cfdi->certificado = $this->certificado;
-        $this->cfdi->save();
-    }
-
-    public function sellar(){
-        $this->sello = CfdiBase::signData($this->key, $this->cadenaOriginal);
-
-        $this->cfdi->sello = $this->sello;
-        $this->cfdi->save();
-
-        return $this->sello;
-    }
-
-    public function timbrar(){
-        $response = CfdiTimbrador::timbrado($this->xml->getXML(false));
-
-        echo "Response: "; print_r($response);  echo "<br><br>";
-
-        if($response["obtenerTimbradoResult"]["timbre"]["!esValido"] == true){
-            $timbre = $response["obtenerTimbradoResult"]["timbre"]["TimbreFiscalDigital"];
-
-            $this->xml->timbrar($timbre);
-        }
-
-        return $response;
-    }
-
-    public function addendar(){
-        $this->xml->addendar();
-    }
-
-    public function guardar($url = false){
-        if(!$url){
-            $this->xml->saveFile($this->tmp_file);
-        }
-        else{
-            $this->xml->saveFile($url);
-        }
+class Cfdi extends CfdiBase{
+    public function __construct(CfdiFactura $cfdi){
+        parent::__construct($cfdi);
     }
 
     public function cadenaOriginal(){
@@ -104,4 +25,45 @@ class Cfdi{
 
         return $cadena;
     }
+
+    public function sellar(){
+        $this->sello = $this->signData($this->key, $this->cadenaOriginal);
+
+        $this->cfdi->sello = $this->sello;
+        $this->cfdi->save();
+
+        return $this->sello;
+    }
+
+    public function timbrar(){
+        $timbrador = new CfdiTimbrador();
+
+        print_r($timbrador); echo "<br><br>";
+
+        $response = $timbrador->timbrar($this->xml->getXML());
+
+        return $response;
+    }
+
+    public function cancelar(){
+        $timbrador = new CfdiTimbrador();
+
+        $response = $timbrador->cancelar($this->uuid());
+
+        return $response;
+    }
+
+    public function guardar($path = false){
+        if(!$path){
+            $this->xml->saveFile($this->tmp_file);
+        }
+        else{
+            $this->xml->saveFile($path);
+        }
+    }
+
+    public function addendar(){
+        $this->xml->addendar();
+    }
+
 }

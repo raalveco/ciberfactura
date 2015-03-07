@@ -3,101 +3,99 @@
 
     use Illuminate\Support\Facades\Config;
 
-    class CfdiTimbrador{
-        private $namespace = 'http://micommerce.mx';
+    class CfdiTimbrador implements CfdiTimbradoInterface{
+        private $namespace = 'http://www.ciberfactura.com.mx';
 
-        //TESTING
-        private $url = 'http://app.facturadorelectronico.com/pruebastimbradofe/timbrado.asmx?WSDL';
-        private $id_usuario_global = 1; //idusuario global.
-        private $usuario = "test";
-        private $password = "TEST";
+        private $soap_autentificar;
+        private $soap_timbrar;
+        private $soap_cancelar;
 
-        private $cliente = null;
+        private $usuario;
+        private $password;
+        private $token;
+
+        private $cer;
+        private $key;
+        private $clave_privada;
+        private $rfc;
 
         public function __construct(){
             if(Config::get('packages/raalveco/ciberfactura/config.production')){
-                $this->url = 'https://cfdi.facturadorelectronico.com/wstimbrado/timbrado.asmx?WSDL';
-                $this->id_usuario_global = 1; //idusuario global.
-                $this->usuario = "RamLozcTrx";
-                $this->password = "VrGY3Brad";
+                $url_autentificar = Config::get('packages/raalveco/ciberfactura/pac.url_autentificar');
+                $url_timbrar = Config::get('packages/raalveco/ciberfactura/pac.url_timbrar');
+                $url_cancelar = Config::get('packages/raalveco/ciberfactura/pac.url_cancelar');
+
+                $this->usuario = Config::get('packages/raalveco/ciberfactura/pac.usuario');
+                $this->password = Config::get('packages/raalveco/ciberfactura/pac.password');
+                $this->rfc = Config::get('packages/raalveco/ciberfactura/pac.rfc');
+
+                $url_cer = app_path()."/config/packages/raalveco/ciberfactura/certificados/".Config::get('packages/raalveco/ciberfactura/config.cer');
+                $url_key = app_path()."/config/packages/raalveco/ciberfactura/certificados/".Config::get('packages/raalveco/ciberfactura/config.key');
+                $clave_privada = Config::get('packages/raalveco/ciberfactura/config.clave_privada');
+
             }
             else{
-                $this->url = 'http://app.facturadorelectronico.com/pruebastimbradofe/timbrado.asmx?WSDL';
-                $this->id_usuario_global = 1; //idusuario global.
-                $this->usuario = "test";
-                $this->password = "TEST";
+                $url_autentificar = "https://pruebascfdi.smartweb.com.mx/Autenticacion/wsAutenticacion.asmx?wsdl";
+                $url_timbrar = "https://pruebascfdi.smartweb.com.mx/Timbrado/wsTimbrado.asmx?wsdl";
+                $url_cancelar = "https://pruebascfdi.smartweb.com.mx/Autenticacion/wsAutenticacion.asmx?wsdl";
+
+                $this->usuario = "demo";
+                $this->password = "123456789";
+                $this->rfc = 'AAD990814BP7';
+
+                $url_cer = app_path()."/config/packages/raalveco/ciberfactura/certificados/test/aad990814bp7_1210261233s.cer";
+                $url_key = app_path()."/config/packages/raalveco/ciberfactura/certificados/test/aad990814bp7_1210261233s.key";
+                $clave_privada = "12345678a";
             }
 
-            $this->cliente = new \nusoap_client($this->url,'soap');
-            $this->cliente->soap_defencoding = "UTF-8";
-            $this->cliente->decode_utf8 = false;
+            $this->soap_autentificar = new \nusoap_client($url_autentificar,'soap');
+            $this->soap_autentificar->soap_defencoding = "UTF-8";
+            $this->soap_autentificar->decode_utf8 = false;
 
-            if ($error = $this->cliente->getError()) {
-                return null;
-            }
-        }
+            $this->soap_timbrar = new \nusoap_client($url_timbrar,'soap');
+            $this->soap_timbrar->soap_defencoding = "UTF-8";
+            $this->soap_timbrar->decode_utf8 = false;
 
-        public static function timbrado($xml){
-            $facturador = new CfdiTimbrador();
+            $this->soap_cancelar = new \nusoap_client($url_cancelar,'soap');
+            $this->soap_cancelar->soap_defencoding = "UTF-8";
+            $this->soap_cancelar->decode_utf8 = false;
 
-            $xml = preg_replace("/[\r\n]/", '', $xml);
+            $this->cer = base64_encode(file_get_contents($url_cer));
+            $this->key = base64_encode(file_get_contents($url_key));
+            $this->$clave_privada = $clave_privada;
 
-            //obtenerTimbrado
             $parametros = array(
-                'CFDIcliente' => $xml,
-                'Usuario' => $facturador->usuario,
-                'password' => $facturador->password
+                'usuario' => $this->usuario,
+                'password' => $this->password
             );
 
-            print_r($parametros); echo "<br><br>";
-
-            $resultado = $facturador->cliente->call('obtenerTimbrado',$parametros,$facturador->namespace);
-
-            print_r($resultado);
-
-            return $resultado;
+            $this->token = $this->soap_autentificar->call('AutenticarBasico', $parametros, $this->$namespace);
         }
 
-        public static function cancelacion($xml){
-            $facturador = new CfdiTimbrador();
-
-            //Cancelacion
+        public function timbrar($xml){
             $parametros = array(
-                'xmlCancelacion' => $xml,
-                'usuario' => $facturador->usuario,
-                'password' => $facturador->password
+                'xmlComprobante' => $xml,
+                'tokenAutenticacion' => $this->token,
+                'password' => $this->password
             );
 
-            $resultado = $facturador->cliente->call('cancelarComprobante',$parametros,$facturador->namespace);
+            $response = $this->soap_timbrar->call('TimbrarXML', $parametros, $this->$namespace);
 
-            return $resultado; echo "<br><br>";
+            return $response;
         }
 
-        public static function cancelacionPFX($rfc, $uuid, $pfx, $pfx_pass){
-            $facturador = new CfdiTimbrador();
-
-            $rawFile = fread(fopen($pfx, "r"), filesize($pfx));
-            $pfx_base64 = base64_encode($rawFile);
-
-            //echo $rfc."<br><br>";
-            //echo $pfx."<br><br>";
-            //echo $facturador->usuario."<br><br>";
-            //echo $facturador->password."<br><br>";
-            //echo $pfx_pass."<br><br>";
-            //echo $pfx_base64."<br><br>";
-
-            //Cancelacion
+        public function cancelar($uuid){
             $parametros = array(
-                'usuario' => $facturador->usuario,
-                'password' => $facturador->password,
-                'uuids' => array($uuid),
-                'pfx' => $pfx_base64,
-                'passwordPfx' => $pfx_pass,
-                'rfc' => $rfc,
+                'CSDCer' => $this->cer,
+                'CSDKey' => $this->key,
+                'password' => $this->clave_privada,
+                'RFCEmisor' => $this->rfc,
+                'UUIDs' => array($uuid),
+                'tokenAutenticacion' => $this->token
             );
 
-            $resultado = $facturador->cliente->call('EnviarCancelacionPFX',$parametros);
+            $response = $this->soap_timbrar->call('TimbrarXML', $parametros, $this->$namespace);
 
-            return $resultado;
+            return $response;
         }
     }

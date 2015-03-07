@@ -2,6 +2,54 @@
 namespace Ciberfactura;
 
 class CfdiBase {
+    public $xml;
+    public $cadenaOriginal;
+    public $sello;
+    public $key;
+    public $certificado;
+    public $noCertificado;
+    public $tmp_file;
+    public $cfdi;
+
+    protected $version = "3.2";
+
+    public function __construct(CfdiFactura $cfdi){
+        if(Config::get('packages/raalveco/ciberfactura/config.production')){
+            $url_cer = app_path()."/config/packages/raalveco/ciberfactura/".Config::get('packages/raalveco/ciberfactura/config.cer');
+            $url_key = app_path()."/config/packages/raalveco/ciberfactura/".Config::get('packages/raalveco/ciberfactura/config.key');
+            $clave_privada = Config::get('packages/raalveco/ciberfactura/config.clave_privada');
+        }
+        else{
+            $url_cer = app_path()."/config/packages/raalveco/ciberfactura/20001000000200000216.cer";
+            $url_key = app_path()."/config/packages/raalveco/ciberfactura/20001000000200000216.key";
+            $clave_privada = "12345678a";
+        }
+
+        $this->noCertificado = CfdiBase::getSerialFromCertificate( $url_cer );
+        $this->certificado = CfdiBase::getCertificate( $url_cer, false );
+        $this->key = CfdiBase::getPrivateKey($url_key, $clave_privada);
+
+        $this->cfdi = $cfdi;
+
+        $this->xml = new CfdiGenerator($this->cfdi);
+
+        if(!file_exists(public_path()."/temp")){
+            mkdir(public_path()."/temp");
+        }
+
+        $this->tmp_file = public_path()."/temp/".sha1(date("Y-m-d H:i:s".rand(0,100000))).".xml";
+        $this->xml->saveFile($this->tmp_file, false);
+
+        $this->cadenaOriginal = CfdiBase::getOriginalString($this->tmp_file, app_path().'/config/packages/raalveco/ciberfactura/cadenaoriginal_3_2.xslt');
+
+        $this->cfdi->noCertificado = $this->noCertificado;
+        $this->cfdi->certificado = $this->certificado;
+        $this->cfdi->save();
+    }
+
+    public function uuid(){
+        return $this->cfdi->uuid();
+    }
 
     public static function sealXML($archivo_key, $archivo_cer, $cadena_original){
         $numero_certificado = CfdiBase::getSerialFromCertificate( $archivo_cer );

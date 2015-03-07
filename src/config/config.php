@@ -11,11 +11,9 @@
  */
 
 return array(
-
     'production' => false,
 	'cer' => '00001000000302642746.cer',
     'key' => '00001000000302642746.key',
     'clave_privada' => 'Ramiro07',
-    'logo' => 'logotipo.png',
-
+    'logo' => 'logotipo.png'
 );
