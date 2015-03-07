@@ -33,10 +33,7 @@ class Cfdi extends CfdiBase{
 
         $timbre = simplexml_load_string($response->TimbrarXMLResult);
 
-        echo "Respuesta del Timbre: ".
-            print_r($timbre);
-
-        $this->cfdi->addComplemento($timbre->version, $timbre->uuid, $timbre->fechatimbrado, $timbre->sellocfd, $timbre->certificadosat, $timbre->sellosat);
+        $this->cfdi->addComplemento($timbre->version, $timbre->UUID, $timbre->FechaTimbrado, $timbre->selloCFD, $timbre->noCertificadoSAT, $timbre->selloSAT);
         $this->xml->timbrar($timbre);
 
         return $response;
