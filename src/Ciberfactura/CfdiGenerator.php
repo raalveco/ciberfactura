@@ -23,7 +23,7 @@
 
             $comprobante->agregarAtributo("formaDePago", "PAGO EN UNA SOLA EXHIBICION");
             $comprobante->agregarAtributo("total", $cfdi->total);
-            $comprobante->agregarAtributo("subTotal", $cfdi->subtotal);
+            $comprobante->agregarAtributo("subTotal", $cfdi->subTotal);
             $comprobante->agregarAtributo("LugarExpedicion", "MÉXICO");
             $comprobante->agregarAtributo("metodoPago", $cfdi->metodoPago ? $cfdi->metodoPago : "efectivo");
             $comprobante->agregarAtributo("tipoDeComprobante", $cfdi->tipoDeComprobante ? $cfdi->tipoDeComprobante : "ingreso");
