@@ -6,6 +6,8 @@ use \Illuminate\Database\Eloquent\Model;
 class CfdiFactura extends Model{
     protected $table = "cfdi_facturas";
 
+    protected $guarded = array();
+
     public function addEmisor($rfc, $nombre="", $calle="", $exterior="", $interior="", $colonia="", $localidad="", $municipio="", $estado="", $pais="", $cp=""){
         $this->save();
 
