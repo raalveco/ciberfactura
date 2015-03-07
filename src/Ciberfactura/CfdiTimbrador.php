@@ -48,6 +48,8 @@
                 $clave_privada = "12345678a";
             }
 
+            echo $url_autentificar;
+
             $this->soap_autentificar = new \nusoap_client($url_autentificar,'soap');
             $this->soap_autentificar->soap_defencoding = "UTF-8";
             $this->soap_autentificar->decode_utf8 = false;
@@ -65,9 +67,13 @@
             $this->$clave_privada = $clave_privada;
 
             $parametros = array(
-                'usuario' => $this->usuario,
-                'password' => $this->password
+                'request' => array(
+                                'usuario' => $this->usuario,
+                                'password' => $this->password
+                )
             );
+
+            print_r($this->soap_autentificar);
 
             $this->token = $this->soap_autentificar->call('AutenticarBasico', $parametros, $this->$namespace);
         }
