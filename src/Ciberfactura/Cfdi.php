@@ -1,17 +1,6 @@
 <?php
 namespace Ciberfactura;
 
-use CfdiComplemento;
-use CfdiConcepto;
-use CfdiEmisor;
-use CfdiFactura;
-use CfdiImpuesto;
-use CfdiReceptor;
-use CfdiRegimen;
-use CfdiSucursal;
-
-use Illuminate\Support\Facades\Config;
-
 class Cfdi extends CfdiBase{
     public function __construct(CfdiFactura $cfdi){
         parent::__construct($cfdi);

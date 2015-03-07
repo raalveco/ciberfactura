@@ -1,6 +1,8 @@
 <?php
 namespace Ciberfactura;
 
+use Illuminate\Support\Facades\Config;
+
 class CfdiBase {
     public $xml;
     public $cadenaOriginal;
