@@ -21,6 +21,8 @@ class Cfdi extends CfdiBase{
         $this->cfdi->sello = $this->sello;
         $this->cfdi->save();
 
+        $this->xml->sellar($this->sello, $this->$noCertificado, $this->certificado);
+
         return $this->sello;
     }
 
