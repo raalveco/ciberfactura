@@ -22,10 +22,10 @@
             $comprobante->agregarAtributo("fecha", date("Y-m-d")."T".date("H:i:s"));
 
             $comprobante->agregarAtributo("formaDePago", "PAGO EN UNA SOLA EXHIBICION");
-            $comprobante->agregarAtributo("tipoDeComprobante", strtolower($cfdi->tipoDeComprobante));
+            $comprobante->agregarAtributo("tipoDeComprobante", $cfdi->tipoDeComprobante);
             $comprobante->agregarAtributo("total", $cfdi->total);
             $comprobante->agregarAtributo("subTotal", $cfdi->subtotal);
-            $comprobante->agregarAtributo("LugarExpedicion", "MEXICO");
+            $comprobante->agregarAtributo("LugarExpedicion", "MÉXICO");
             $comprobante->agregarAtributo("metodoDePago", $cfdi->metodoPago);
 
             $cfdi_emisor = $cfdi->emisor();
