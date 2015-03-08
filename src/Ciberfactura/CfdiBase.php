@@ -31,8 +31,6 @@ class CfdiBase {
             mkdir(public_path()."/cfdis");
         }
 
-        echo "Clave Privada: ".$clave_privada;
-
         $this->noCertificado = CfdiBase::getSerialFromCertificate( $url_cer );
         $this->certificado = CfdiBase::getCertificate( $url_cer, false );
         $this->key = CfdiBase::getPrivateKey($url_key, $clave_privada);
@@ -81,7 +79,6 @@ class CfdiBase {
             unset( $cmd );
             return $result;
         }
-        echo $cmd;
         return false;
     }
 
