@@ -16,16 +16,9 @@ class CfdiBase {
     protected $version = "3.2";
 
     public function __construct(CfdiFactura $cfdi){
-        if(Config::get('packages/raalveco/ciberfactura/config.production')){
-            $url_cer = app_path()."/config/packages/raalveco/ciberfactura/certificados/".Config::get('packages/raalveco/ciberfactura/config.cer');
-            $url_key = app_path()."/config/packages/raalveco/ciberfactura/certificados/".Config::get('packages/raalveco/ciberfactura/config.key');
-            $clave_privada = Config::get('packages/raalveco/ciberfactura/config.clave_privada');
-        }
-        else{
-            $url_cer = app_path()."/config/packages/raalveco/ciberfactura/certificados/test/aad990814bp7_1210261233s.cer";
-            $url_key = app_path()."/config/packages/raalveco/ciberfactura/certificados/test/aad990814bp7_1210261233s.key";
-            $clave_privada = "12345678a";
-        }
+        $url_cer = app_path()."/config/packages/raalveco/ciberfactura/certificados/".Config::get('packages/raalveco/ciberfactura/config.cer');
+        $url_key = app_path()."/config/packages/raalveco/ciberfactura/certificados/".Config::get('packages/raalveco/ciberfactura/config.key');
+        $clave_privada = Config::get('packages/raalveco/ciberfactura/config.clave_privada');
 
         if(!file_exists(public_path()."/cfdis")){
             mkdir(public_path()."/cfdis");
