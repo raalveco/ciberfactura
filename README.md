@@ -93,7 +93,7 @@ Example
     $factura->addRegimen("Simplificado");
 
     $cfdi = new Cfdi($factura);
-    
+
     $cfdi->sellar();
     $cfdi->timbrar();
     $cfdi->guardar();
