@@ -20,10 +20,6 @@ class CfdiBase {
         $url_key = app_path()."/config/packages/raalveco/ciberfactura/certificados/".Config::get('packages/raalveco/ciberfactura/config.key');
         $clave_privada = Config::get('packages/raalveco/ciberfactura/config.clave_privada');
 
-        echo $url_cer."<br>";
-        echo $url_key."<br>";
-        echo $clave_privada."<br>";
-
         if(!file_exists(public_path()."/cfdis")){
             mkdir(public_path()."/cfdis");
         }
