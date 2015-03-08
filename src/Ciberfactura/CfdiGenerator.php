@@ -164,7 +164,7 @@
             $complemento = new Nodo("cfdi:Complemento");
 
             $complemento->agregarAtributo("xmlns:tfd", "http://www.sat.gob.mx/TimbreFiscalDigital");
-            $complemento->agregarAtributo("xsi:schemaLocation", $timbre[0]["xsi:schemaLocation"]);
+            $complemento->agregarAtributo("xsi:schemaLocation", $timbre["xsi:schemaLocation"]);
             $complemento->agregarAtributo("version", $timbre[0]["version"]);
             $complemento->agregarAtributo("FechaTimbrado", $timbre[0]["FechaTimbrado"]);
             $complemento->agregarAtributo("selloCFD", $timbre[0]["selloCFD"]);
