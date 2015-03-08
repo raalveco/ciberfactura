@@ -144,8 +144,6 @@ class CfdiFactura extends Model{
 
         $complemento->save();
 
-        print_r($complemento);
-
         return $complemento;
     }
 

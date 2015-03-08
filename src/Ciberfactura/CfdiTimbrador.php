@@ -33,7 +33,6 @@
                     $url_cer = app_path()."/config/packages/raalveco/ciberfactura/certificados/".Config::get('packages/raalveco/ciberfactura/config.cer');
                     $url_key = app_path()."/config/packages/raalveco/ciberfactura/certificados/".Config::get('packages/raalveco/ciberfactura/config.key');
                     $clave_privada = Config::get('packages/raalveco/ciberfactura/config.clave_privada');
-
                 }
                 else{
                     $url_autentificar = Config::get('packages/raalveco/ciberfactura/config.pac_test.url_autentificar');
