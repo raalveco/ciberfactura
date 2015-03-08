@@ -27,8 +27,8 @@ class CfdiBase {
             $clave_privada = "12345678a";
         }
 
-        if(!file_exists(Config::get('packages/raalveco/ciberfactura/config.path_cfdis'))){
-            mkdir(Config::get('packages/raalveco/ciberfactura/config.path_cfdis'));
+        if(!file_exists(public_path()."/cfdis")){
+            mkdir(public_path()."/cfdis");
         }
 
         $this->noCertificado = CfdiBase::getSerialFromCertificate( $url_cer );

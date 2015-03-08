@@ -31,8 +31,6 @@ class Cfdi extends CfdiBase{
 
         $response = $timbrador->timbrar($this->xml->getXML());
 
-        print_r($response->TimbrarXMLResult);
-
         $tmp = substr($response->TimbrarXMLResult,strpos($response->TimbrarXMLResult, 'xsi:schemaLocation="') + 20);
         $tmp = substr($tmp,0, strpos($tmp,'"'));
 
@@ -55,7 +53,7 @@ class Cfdi extends CfdiBase{
 
     public function guardar($path = false){
         if(!$path){
-            $this->xml->saveFile($this->tmp_file);
+            $this->xml->saveFile(public_path()."/cfdis/".$this->cfdi->uuid().".xml");
         }
         else{
             $this->xml->saveFile($path);
