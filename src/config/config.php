@@ -15,5 +15,6 @@ return array(
 	'cer' => '00001000000302642746.cer',
     'key' => '00001000000302642746.key',
     'clave_privada' => 'Ramiro07',
+    'path_xmls' => public_path().'/cfdis',
     'logo' => 'logotipo.png'
 );

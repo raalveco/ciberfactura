@@ -197,6 +197,10 @@
             $this->xml->save($file);
         }
 
+        public function saveXML($file, $format = true){
+            $this->saveFile($file, $format);
+        }
+
         public function xmlizar($nodo){
             $xml = $this->xml->createElement($nodo->nombre);
 
