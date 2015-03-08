@@ -14,7 +14,7 @@ return array(
     'url_autentificar' => 'https://cfdi.smartweb.com.mx/Autenticacion/wsAutenticacion.asmx?wsdl',
     'url_timbrar' => 'https://cfdi.smartweb.com.mx/Timbrado/wsTimbrado.asmx?wsdl',
     'url_cancelar' => 'https://cfdi.smartweb.com.mx/Cancelacion/wsCancelacion.asmx?wsdl',
-    'user' => 'demo',
+    'usuario' => 'demo',
     'password' => '123456789',
     'rfc' => 'AAD990814BP7'
 );
