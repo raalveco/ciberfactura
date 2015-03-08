@@ -22,8 +22,8 @@
             $comprobante->agregarAtributo("fecha", date("Y-m-d")."T".date("H:i:s"));
 
             $comprobante->agregarAtributo("formaDePago", "PAGO EN UNA SOLA EXHIBICION");
-            $comprobante->agregarAtributo("total", $cfdi->total);
-            $comprobante->agregarAtributo("subTotal", $cfdi->subTotal);
+            $comprobante->agregarAtributo("total", number_format($cfdi->total,2,".",""));
+            $comprobante->agregarAtributo("subTotal", number_format($cfdi->subTotal,2,".",""));
             $comprobante->agregarAtributo("LugarExpedicion", "MÉXICO");
             $comprobante->agregarAtributo("metodoDePago", $cfdi->metodoPago ? $cfdi->metodoPago : "efectivo");
             $comprobante->agregarAtributo("tipoDeComprobante", $cfdi->tipoDeComprobante ? $cfdi->tipoDeComprobante : "ingreso");
@@ -99,8 +99,8 @@
                 $concepto->agregarAtributo("cantidad", $cfdi_concepto->cantidad);
                 $concepto->agregarAtributo("unidad", $cfdi_concepto->unidad);
                 $concepto->agregarAtributo("descripcion", $cfdi_concepto->descripcion);
-                $concepto->agregarAtributo("valorUnitario", $cfdi_concepto->valorUnitario);
-                $concepto->agregarAtributo("importe", $cfdi_concepto->importe);
+                $concepto->agregarAtributo("valorUnitario", number_format($cfdi_concepto->valorUnitario,2,".",""));
+                $concepto->agregarAtributo("importe", number_format($cfdi_concepto->importe,2,".",""));
                 $conceptos->agregarNodo($concepto);
             }
 
@@ -120,8 +120,8 @@
                     $total_trasladados += $cfdi_impuesto->importe;
 
                     $traslado = new Nodo("cfdi:Traslado");
-                    $traslado->agregarAtributo("tasa", $cfdi_impuesto->tasa);
-                    $traslado->agregarAtributo("importe", $cfdi_impuesto->importe);
+                    $traslado->agregarAtributo("tasa", number_format($cfdi_impuesto->tasa,2,".",""));
+                    $traslado->agregarAtributo("importe", number_format($cfdi_impuesto->importe,2,".",""));
                     $traslado->agregarAtributo("impuesto", $cfdi_impuesto->nombre);
 
                     $traslados->agregarNodo($traslado);
@@ -130,8 +130,8 @@
                     $total_retenidos += $cfdi_impuesto->importe;
 
                     $retenido = new Nodo("cfdi:Retenido");
-                    $retenido->agregarAtributo("tasa", $cfdi_impuesto->tasa);
-                    $retenido->agregarAtributo("importe", $cfdi_impuesto->importe);
+                    $retenido->agregarAtributo("tasa", number_format($cfdi_impuesto->tasa,2,".",""));
+                    $retenido->agregarAtributo("importe", number_format($cfdi_impuesto->importe,2,".",""));
                     $retenido->agregarAtributo("impuesto", $cfdi_impuesto->nombre);
 
                     $retenidos->agregarNodo($retenido);
@@ -141,12 +141,12 @@
             //Impuestos
             if($total_trasladados>0){
                 $impuestos->agregarNodo($traslados);
-                $impuestos->agregarAtributo("totalImpuestosTrasladados", $total_trasladados);
+                $impuestos->agregarAtributo("totalImpuestosTrasladados", number_format($total_trasladados,2,".",""));
             }
 
             if($total_retenidos>0){
                 $impuestos->agregarNodo($retenidos);
-                $impuestos->agregarAtributo("totalImpuestosRetenidos", $total_retenidos);
+                $impuestos->agregarAtributo("totalImpuestosRetenidos", number_format($total_retenidos,2,".",""));
             }
 
             $comprobante->agregarNodo($impuestos);
