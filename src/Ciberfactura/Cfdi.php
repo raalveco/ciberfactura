@@ -33,9 +33,9 @@ class Cfdi extends CfdiBase{
 
         $timbre = simplexml_load_string($response->TimbrarXMLResult);
 
-        print_r($timbre);
+        print_r($timbre[0]);
 
-        $this->cfdi->addComplemento($timbre->version, $timbre->UUID, $timbre->FechaTimbrado, $timbre->selloCFD, $timbre->noCertificadoSAT, $timbre->selloSAT);
+        $this->cfdi->addComplemento($timbre[0]["version"], $timbre[0]["UUID"], $timbre[0]["FechaTimbrado"], $timbre[0]["selloCFD"], $timbre[0]["noCertificadoSAT"], $timbre[0]["selloSAT"]);
         $this->xml->timbrar($timbre);
 
         return $response;
