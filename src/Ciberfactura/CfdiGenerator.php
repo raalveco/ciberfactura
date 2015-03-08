@@ -166,11 +166,11 @@
             $complemento->agregarAtributo("xmlns:tfd", "http://www.sat.gob.mx/TimbreFiscalDigital");
             $complemento->agregarAtributo("xsi:schemaLocation", $timbre->{"xsi:schemaLocation"});
             $complemento->agregarAtributo("version", $timbre->{"version"});
-            $complemento->agregarAtributo("FechaTimbrado", $timbre->{"fechatimbrado"});
-            $complemento->agregarAtributo("selloCFD", $timbre->{"sellocfd"});
-            $complemento->agregarAtributo("noCertificadoSAT", $timbre->{"nocertificadosat"});
-            $complemento->agregarAtributo("selloSAT", $timbre->{"sellosat"});
-            $complemento->agregarAtributo("UUID", $timbre->{"uuid"});
+            $complemento->agregarAtributo("FechaTimbrado", $timbre->{"FechaTimbrado"});
+            $complemento->agregarAtributo("selloCFD", $timbre->{"selloCFD"});
+            $complemento->agregarAtributo("noCertificadoSAT", $timbre->{"noCertificadoSAT"});
+            $complemento->agregarAtributo("selloSAT", $timbre->{"selloSAT"});
+            $complemento->agregarAtributo("UUID", $timbre->{"UUID"});
 
             $this->cfdi->agregarNodo($complemento);
         }
