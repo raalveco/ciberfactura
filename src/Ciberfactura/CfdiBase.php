@@ -47,7 +47,7 @@ class CfdiBase {
         }
         else{
             $xml_file = public_path()."/cfdis/".$this->cfdi->uuid().".xml";
-            $this->cadenaOriginal = CfdiBase::getOriginalString($$xml_file, app_path().'/config/packages/raalveco/ciberfactura/cadenaoriginal_3_2.xslt');
+            $this->cadenaOriginal = CfdiBase::getOriginalString($xml_file, app_path().'/config/packages/raalveco/ciberfactura/cadenaoriginal_3_2.xslt');
         }
 
         $this->cfdi->save();
