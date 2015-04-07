@@ -13,6 +13,21 @@
 return array(
     'production' => false,
     'rfc' => 'AAD990814BP7',
+    'emisor' => array(
+        'rfc' => 'AAD990814BP7',
+        'razon_social' => 'EMPRESA PRUEBAS SA DE CV',
+        'calle' => 'Avenida Américas',
+        'no_interior' => '334',
+        'no_exterior' => '302',
+        'colonia' => 'Altamira',
+        'localidad' => 'Zapopan',
+        'municipio' => 'Zapopan',
+        'estado' => 'Jalisco',
+        'pais' => 'México',
+        'cpostal' => '44690',
+
+    ),
+    'regimenes' => array('Simplificado'),
     'cer' => 'AAD990814BP7/aad990814bp7_1210261233s.cer',
     'key' => 'AAD990814BP7/aad990814bp7_1210261233s.key',
     'clave_privada' => '12345678a',
