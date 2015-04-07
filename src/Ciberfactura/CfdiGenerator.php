@@ -22,7 +22,7 @@
             
             if($cfdi->folio){
                 $comprobante->agregarAtributo("folio", $cfdi->folio);
-            }
+            } 
 
             $comprobante->agregarAtributo("fecha", date("Y-m-d")."T".date("H:i:s"));
 
