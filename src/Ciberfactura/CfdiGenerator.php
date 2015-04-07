@@ -16,8 +16,13 @@
             $comprobante->agregarAtributo("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
             $comprobante->agregarAtributo("version", "3.2");
 
-            $comprobante->agregarAtributo("serie", $cfdi->serie);
-            $comprobante->agregarAtributo("folio", $cfdi->folio);
+            if($cfdi->serie){
+                $comprobante->agregarAtributo("serie", $cfdi->serie);
+            }
+            
+            if($cfdi->folio){
+                $comprobante->agregarAtributo("folio", $cfdi->folio);
+            }
 
             $comprobante->agregarAtributo("fecha", date("Y-m-d")."T".date("H:i:s"));
 
