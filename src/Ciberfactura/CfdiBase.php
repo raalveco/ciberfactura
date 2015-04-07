@@ -20,34 +20,47 @@ class CfdiBase {
         $url_key = app_path()."/config/packages/raalveco/ciberfactura/certificados/".Config::get('packages/raalveco/ciberfactura/config.key');
         $clave_privada = Config::get('packages/raalveco/ciberfactura/config.clave_privada');
 
-        if(!file_exists(public_path()."/cfdis")){
-            mkdir(public_path()."/cfdis");
-        }
-
         $this->noCertificado = CfdiBase::getSerialFromCertificate( $url_cer );
         $this->certificado = CfdiBase::getCertificate( $url_cer, false );
         $this->key = CfdiBase::getPrivateKey($url_key, $clave_privada);
 
         $this->cfdi = $cfdi;
 
-        $this->xml = new CfdiGenerator($this->cfdi);
-
-        if(!file_exists(public_path()."/temp")){
-            mkdir(public_path()."/temp");
-        }
-
-        $this->tmp_file = public_path()."/temp/".sha1(date("Y-m-d H:i:s".rand(0,100000))).".xml";
-        $this->xml->saveFile($this->tmp_file, false);
-
-        $this->cadenaOriginal = CfdiBase::getOriginalString($this->tmp_file, app_path().'/config/packages/raalveco/ciberfactura/cadenaoriginal_3_2.xslt');
-
         $this->cfdi->noCertificado = $this->noCertificado;
         $this->cfdi->certificado = $this->certificado;
+
+        if(CfdiComplemento::whereRaw("cfdi_id = $cfdi->id")->count() == 0){
+            if(!file_exists(public_path()."/cfdis")){
+                mkdir(public_path()."/cfdis");
+            }
+
+            $this->xml = new CfdiGenerator($this->cfdi);
+
+            if(!file_exists(public_path()."/temp")){
+                mkdir(public_path()."/temp");
+            }
+
+            $this->tmp_file = public_path()."/temp/".sha1(date("Y-m-d H:i:s".rand(0,100000))).".xml";
+            $this->xml->saveFile($this->tmp_file, false);
+
+            $this->cadenaOriginal = CfdiBase::getOriginalString($this->tmp_file, app_path().'/config/packages/raalveco/ciberfactura/cadenaoriginal_3_2.xslt');
+        }
+        else{
+            $xml_file = public_path()."/cfdis/".$this->cfdi->uuid().".xml";
+            $this->cadenaOriginal = CfdiBase::getOriginalString($$xml_file, app_path().'/config/packages/raalveco/ciberfactura/cadenaoriginal_3_2.xslt');
+        }
+
         $this->cfdi->save();
     }
 
     public function xml(){
-        return $this->xml->getXML();
+        $cfdi_id = $this->cfdi->id;
+        if(CfdiComplemento::whereRaw("cfdi_id = $cfdi_id")->count() == 0){
+            return $this->xml->getXML();
+        }
+        else{
+            return file_get_contents(public_path()."/cfdis/".$this->cfdi->uuid().".xml");
+        }
     }
 
     public function uuid(){
