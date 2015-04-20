@@ -83,12 +83,16 @@
 
         public function cancelar($uuid){
             try{
+                if(!is_array($uuid)){
+                    $uuid = array($uuid);
+                }
+
                 $parametros = array(
                     'CSDCer' => $this->cer,
                     'CSDKey' => $this->key,
                     'password' => $this->clave_privada,
                     'RFCEmisor' => $this->rfc,
-                    'UUIDs' => array($uuid),
+                    'UUIDs' => $uuid,
                     'tokenAutenticacion' => $this->token
                 );
 
