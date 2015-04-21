@@ -48,6 +48,8 @@ class Cfdi extends CfdiBase{
 
         $response = $timbrador->cancelar($this->uuid());
 
+        file_put_contents(public_path()."/cfdis/".$this->cfdi->uuid()."ACUSE_CANCELACION.xml",$response);
+
         return $response;
     }
 
