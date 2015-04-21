@@ -96,7 +96,7 @@
                     'tokenAutenticacion' => $this->token
                 );
 
-                $response = $this->soap_cancelar->cancelarCSD($parametros);
+                $response = $this->soap_cancelar->cancelarCSD($parametros)->CancelarCSDResult;
 
                 return $response;
             }
