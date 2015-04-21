@@ -54,7 +54,7 @@
 
                 $this->cer = base64_encode(file_get_contents($url_cer));
                 $this->key = base64_encode(file_get_contents($url_key));
-                $this->$clave_privada = $clave_privada;
+                $this->clave_privada = $clave_privada;
 
                 $token = $this->soap_autentificar->AutenticarBasico(array("usuario" => $this->usuario, "password" => $this->password));
                 $this->token = $token->AutenticarBasicoResult;
