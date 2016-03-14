@@ -1,7 +1,3 @@
-Ciberfactura - Facturación Electrónica en México
-============
-
-
 # Ciberfactura - Facturación Electrónica en México
 
 Libreria que simplifica el proceso de creación y timbrado de CFDIs.
@@ -78,7 +74,7 @@ return array(
 
 Esta libreria servira para emitir facturas con el Smartweb, el cual es un proveedor autorizado de certificación del SAT.
 
-Migrations
+###Migrations
 
 Antes de probar el funcionamiento de la libreria, es necesario ejecutar los migrations que crearán las tablas donde se almacenan los CFDIs.
 
