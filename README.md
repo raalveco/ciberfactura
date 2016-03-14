@@ -82,7 +82,7 @@ Antes de probar el funcionamiento de la libreria, es necesario ejecutar los migr
 php artisan migrate
 ```
 
-##Código de Ejemplo
+###Código de Ejemplo
 
 ```php
     $factura = CfdiFactura::create(

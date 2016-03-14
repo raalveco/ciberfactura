@@ -11,7 +11,10 @@
     ],
     "autoload": {
         "classmap": [
-            "src/facades"
+            "src",
+            "src/facades",
+            "src/libraries",
+            "src/models"
         ]
     },
     "minimum-stability": "dev",
