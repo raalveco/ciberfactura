@@ -1,5 +1,5 @@
 <?php
-namespace Ciberfactura;
+namespace Raalveco\Ciberfactura\Models;
 
 use \Illuminate\Database\Eloquent\Model;
 
@@ -75,6 +75,8 @@ class CfdiFactura extends Model{
         $concepto->importe = $importe;
 
         $concepto->save();
+
+        return $concepto;
     }
 
     public function addImpuesto($tipo, $impuesto_name, $tasa, $importe){
@@ -87,6 +89,8 @@ class CfdiFactura extends Model{
         $impuesto->importe = $importe;
 
         $impuesto->save();
+
+        return $impuesto;
     }
 
     public function addRegimen($regimen_name){
@@ -96,6 +100,8 @@ class CfdiFactura extends Model{
         $regimen->regimen = $regimen_name   ;
 
         $regimen->save();
+
+        return $regimen;
     }
 
     public function addSucursal($calle="", $exterior="", $interior="", $colonia="", $localidad="", $municipio="", $estado="", $pais="", $cp=""){
@@ -125,6 +131,7 @@ class CfdiFactura extends Model{
     }
 
     public function addComplemento($version, $uuid, $fecha, $selloCFD, $certificadoSAT, $selloSAT){
+        $this->uuid = $uuid;
         $this->save();
 
         if(CfdiComplemento::whereRaw("cfdi_id = $this->id")->count() > 0){
@@ -180,6 +187,10 @@ class CfdiFactura extends Model{
     }
 
     public function uuid(){
-        return $this->complemento()->UUID;
+        if($this->complemento()){
+            return $this->complemento()->UUID;
+        }
+
+        return false;
     }
 }

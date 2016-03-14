@@ -1,5 +1,5 @@
 <?php
-namespace Ciberfactura;
+namespace Raalveco\Ciberfactura\Models;
 
 use \Illuminate\Database\Eloquent\Model;
 

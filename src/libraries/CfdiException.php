@@ -1,5 +1,5 @@
 <?php
-    namespace Ciberfactura;
+    namespace Raalveco\Ciberfactura\Libraries;
 
     class CfdiException extends \Exception{
 

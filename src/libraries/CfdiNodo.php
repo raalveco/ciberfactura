@@ -1,7 +1,7 @@
 <?php
-    namespace Ciberfactura;
+    namespace Raalveco\Ciberfactura\Libraries;
 
-    class Nodo{
+    class CfdiNodo{
         public $nombre;
         public $atributos;
         public $nodos;

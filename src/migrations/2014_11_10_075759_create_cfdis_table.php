@@ -18,7 +18,6 @@ class CreateCfdisTable extends Migration {
             $table->string('folio',20)->nulleable();
 
             $table->dateTime('fecha');
-            $table->text('sello');
 
             $table->string('formaDePago')->default("Pago en una sola exhibición");
             $table->string('noCertificado',20);
@@ -44,6 +43,10 @@ class CreateCfdisTable extends Migration {
             $table->string('serieFolioFiscalOrig')->nulleable();
             $table->dateTime('fechaFolioFiscalOrig')->nulleable();
             $table->decimal('montoFolioFiscalOrig', 10, 2)->nulleable();
+
+            $table->text('cadenaOriginal');
+            $table->text('sello');
+            $table->string('uuid');
 
             $table->timestamps();
         });
