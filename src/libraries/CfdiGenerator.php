@@ -186,17 +186,20 @@
         }
 
         public function timbrar($timbre){
-            $complemento = new CfdiNodo("cfdi:Complemento");
+            $complemento = new Nodo("cfdi:Complemento");
 
-            $complemento->agregarAtributo("xmlns:tfd", "http://www.sat.gob.mx/TimbreFiscalDigital");
-            $complemento->agregarAtributo("xsi:schemaLocation", $timbre["schemaLocation"]);
-            $complemento->agregarAtributo("version", $timbre[0]["version"]);
-            $complemento->agregarAtributo("FechaTimbrado", $timbre[0]["FechaTimbrado"]);
-            $complemento->agregarAtributo("selloCFD", $timbre[0]["selloCFD"]);
-            $complemento->agregarAtributo("noCertificadoSAT", $timbre[0]["noCertificadoSAT"]);
-            $complemento->agregarAtributo("selloSAT", $timbre[0]["selloSAT"]);
-            $complemento->agregarAtributo("UUID", $timbre[0]["UUID"]);
+            $timbre_fiscal = new Nodo("tfd:TimbreFiscalDigital");
 
+            $timbre_fiscal->agregarAtributo("xmlns:tfd", "http://www.sat.gob.mx/TimbreFiscalDigital");
+            $timbre_fiscal->agregarAtributo("xsi:schemaLocation", $timbre["schemaLocation"]);
+            $timbre_fiscal->agregarAtributo("version", $timbre[0]["version"]);
+            $timbre_fiscal->agregarAtributo("FechaTimbrado", $timbre[0]["FechaTimbrado"]);
+            $timbre_fiscal->agregarAtributo("selloCFD", $timbre[0]["selloCFD"]);
+            $timbre_fiscal->agregarAtributo("noCertificadoSAT", $timbre[0]["noCertificadoSAT"]);
+            $timbre_fiscal->agregarAtributo("selloSAT", $timbre[0]["selloSAT"]);
+            $timbre_fiscal->agregarAtributo("UUID", $timbre[0]["UUID"]);
+
+            $complemento->agregarNodo($timbre_fiscal);
             $this->cfdi->agregarNodo($complemento);
         }
 
