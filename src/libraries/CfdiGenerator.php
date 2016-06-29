@@ -104,14 +104,15 @@
 
             //Receptor - Domicilio Fiscal
             $domicilio = new CfdiNodo("cfdi:Domicilio");
-            $domicilio->agregarAtributo("calle", $cfdi_receptor->calle);
-            $domicilio->agregarAtributo("noExterior", $cfdi_receptor->noExterior);
+            if($cfdi_receptor->calle) $domicilio->agregarAtributo("calle", $cfdi_receptor->calle);
+            if($cfdi_receptor->exterior) $domicilio->agregarAtributo("noExterior", $cfdi_receptor->noExterior);
             if($cfdi_receptor->interior) $domicilio->agregarAtributo("noInterior", $cfdi_receptor->noInterior);
-            $domicilio->agregarAtributo("colonia", $cfdi_receptor->colonia);
-            $domicilio->agregarAtributo("municipio", $cfdi_receptor->municipio);
-            $domicilio->agregarAtributo("estado", $cfdi_receptor->estado);
-            $domicilio->agregarAtributo("pais", $cfdi_receptor->pais);
-            $domicilio->agregarAtributo("codigoPostal", $cfdi_receptor->codigoPostal);
+
+            if($cfdi_receptor->colonia) $domicilio->agregarAtributo("colonia", $cfdi_receptor->colonia);
+            if($cfdi_receptor->municipio) $domicilio->agregarAtributo("municipio", $cfdi_receptor->municipio);
+            if($cfdi_receptor->estado) $domicilio->agregarAtributo("estado", $cfdi_receptor->estado);
+            if($cfdi_receptor->pais) $domicilio->agregarAtributo("pais", $cfdi_receptor->pais);
+            if($cfdi_receptor->codigoPostal) $domicilio->agregarAtributo("codigoPostal", $cfdi_receptor->codigoPostal);
             $receptor->agregarNodo($domicilio);
 
             $cfdi_conceptos = $cfdi->conceptos();
