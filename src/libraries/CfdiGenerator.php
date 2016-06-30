@@ -186,9 +186,9 @@
         }
 
         public function timbrar($timbre){
-            $complemento = new Nodo("cfdi:Complemento");
+            $complemento = new CfdiNodo("cfdi:Complemento");
 
-            $timbre_fiscal = new Nodo("tfd:TimbreFiscalDigital");
+            $timbre_fiscal = new CfdiNodo("tfd:TimbreFiscalDigital");
 
             $timbre_fiscal->agregarAtributo("xmlns:tfd", "http://www.sat.gob.mx/TimbreFiscalDigital");
             $timbre_fiscal->agregarAtributo("xsi:schemaLocation", $timbre["schemaLocation"]);
