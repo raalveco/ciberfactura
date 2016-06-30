@@ -63,27 +63,27 @@
 
             //Emisor - Domicilio Fiscal
             $domicilioFiscal = new CfdiNodo("cfdi:DomicilioFiscal");
-            $domicilioFiscal->agregarAtributo("calle", $cfdi_emisor->calle);
-            $domicilioFiscal->agregarAtributo("noExterior", $cfdi_emisor->noExterior);
-            if($cfdi_emisor->interior) $domicilioFiscal->agregarAtributo("noInterior", $cfdi_emisor->noInterior);
-            $domicilioFiscal->agregarAtributo("colonia", $cfdi_emisor->colonia);
-            $domicilioFiscal->agregarAtributo("municipio", $cfdi_emisor->municipio);
-            $domicilioFiscal->agregarAtributo("estado", $cfdi_emisor->estado);
-            $domicilioFiscal->agregarAtributo("pais", $cfdi_emisor->pais);
-            $domicilioFiscal->agregarAtributo("codigoPostal", $cfdi_emisor->codigoPostal);
+            if($cfdi_emisor->calle) $domicilioFiscal->agregarAtributo("calle", $cfdi_emisor->calle);
+            if($cfdi_emisor->noExterior) $domicilioFiscal->agregarAtributo("noExterior", $cfdi_emisor->noExterior);
+            if($cfdi_emisor->noInterior) $domicilioFiscal->agregarAtributo("noInterior", $cfdi_emisor->noInterior);
+            if($cfdi_emisor->colonia) $domicilioFiscal->agregarAtributo("colonia", $cfdi_emisor->colonia);
+            if($cfdi_emisor->municipio) $domicilioFiscal->agregarAtributo("municipio", $cfdi_emisor->municipio);
+            if($cfdi_emisor->estado) $domicilioFiscal->agregarAtributo("estado", $cfdi_emisor->estado);
+            if($cfdi_emisor->pais) $domicilioFiscal->agregarAtributo("pais", $cfdi_emisor->pais);
+            if($cfdi_emisor->codigoPostal) $domicilioFiscal->agregarAtributo("codigoPostal", $cfdi_emisor->codigoPostal);
             $emisor->agregarNodo($domicilioFiscal);
 
             //Emisor - Expedido En
             //Si hay sucursales, sacar datos de la sucursal, sino salen del contribuyente
             $expedioEn = new CfdiNodo("cfdi:ExpedidoEn");
-            $expedioEn->agregarAtributo("calle", $cfdi_emisor->calle);
-            $expedioEn->agregarAtributo("noExterior", $cfdi_emisor->noExterior);
-            if($cfdi_emisor->interior) $expedioEn->agregarAtributo("noInterior", $cfdi_emisor->noInterior);
-            $expedioEn->agregarAtributo("colonia", $cfdi_emisor->colonia);
-            $expedioEn->agregarAtributo("municipio", $cfdi_emisor->municipio);
-            $expedioEn->agregarAtributo("estado", $cfdi_emisor->estado);
-            $expedioEn->agregarAtributo("pais", $cfdi_emisor->pais);
-            $expedioEn->agregarAtributo("codigoPostal", $cfdi_emisor->codigoPostal);
+            if($cfdi_emisor->calle) $expedioEn->agregarAtributo("calle", $cfdi_emisor->calle);
+            if($cfdi_emisor->noExterior) $expedioEn->agregarAtributo("noExterior", $cfdi_emisor->noExterior);
+            if($cfdi_emisor->noInterior) $expedioEn->agregarAtributo("noInterior", $cfdi_emisor->noInterior);
+            if($cfdi_emisor->colonia) $expedioEn->agregarAtributo("colonia", $cfdi_emisor->colonia);
+            if($cfdi_emisor->municipio) $expedioEn->agregarAtributo("municipio", $cfdi_emisor->municipio);
+            if($cfdi_emisor->estado) $expedioEn->agregarAtributo("estado", $cfdi_emisor->estado);
+            if($cfdi_emisor->pais) $expedioEn->agregarAtributo("pais", $cfdi_emisor->pais);
+            if($cfdi_emisor->codigoPostal) $expedioEn->agregarAtributo("codigoPostal", $cfdi_emisor->codigoPostal);
             $emisor->agregarNodo($expedioEn);
 
             //Emisor - Regimenes Fiscales
