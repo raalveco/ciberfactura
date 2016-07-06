@@ -17,7 +17,7 @@ class CreateTaxesTable extends Migration {
 
             $table->string('tipo')->default("traslado");
             $table->string('impuesto', 5)->default("IVA");
-            $table->integer('tasa')->nulleable();
+            $table->decimal('tasa',10,4)->nulleable();
             $table->decimal('importe',10,2);
 
             $table->timestamps();
