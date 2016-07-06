@@ -142,7 +142,7 @@
             $retenidos = new CfdiNodo("cfdi:Retenciones");
 
             if($cfdi_impuestos) foreach($cfdi_impuestos as $cfdi_impuesto){
-                if(strtoupper($cfdi_impuesto->tipo) == "TRASLADADO"){
+                if(strtoupper($cfdi_impuesto->tipo) == "TRASLADADO" || strtoupper($cfdi_impuesto->tipo) == "TRASLADO"){
                     $total_trasladados += $cfdi_impuesto->importe;
 
                     $traslado = new CfdiNodo("cfdi:Traslado");
