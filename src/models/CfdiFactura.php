@@ -166,8 +166,16 @@ class CfdiFactura extends Model{
         return CfdiConcepto::whereRaw("cfdi_id = $this->id")->get();
     }
 
+    public function concepts(){
+        return $this->hasMany('Raalveco\Ciberfactura\Models\CfdiConcepto', 'cfdi_id');
+    }
+
     public function impuestos(){
         return CfdiImpuesto::whereRaw("cfdi_id = $this->id")->get();
+    }
+
+    public function taxes(){
+        return $this->hasMany('Raalveco\Ciberfactura\Models\CfdiImpuesto', 'cfdi_id');
     }
 
     public function regimen(){
