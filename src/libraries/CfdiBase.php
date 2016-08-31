@@ -18,7 +18,7 @@ class CfdiBase {
     public $production = false;
     public $certificate = array();
     
-    public $path = public_path()."/cfdis";
+    public $path = false;
 
     protected $version = "3.2";
 
@@ -119,6 +119,10 @@ class CfdiBase {
     }
 
     public function loadCfdi(CfdiFactura $cfdi){
+        if(!$this->path){
+            $this->path = public_path()."/cfdis";
+        }
+        
         $this->hasCertificate();
         $this->validateCfdi($cfdi);
 
