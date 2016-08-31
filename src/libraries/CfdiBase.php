@@ -17,6 +17,8 @@ class CfdiBase {
     public $rfc;
     public $production = false;
     public $certificate = array();
+    
+    public $path = public_path()."/cfdis";
 
     protected $version = "3.2";
 
@@ -70,6 +72,14 @@ class CfdiBase {
 
     public function setProduction($production){
         $this->production = $production;
+    }
+    
+    public function setPath($path = false){
+        if(!$path){
+            $path = public_path()."/cfdis";
+        }
+        
+        $this->path = $path;
     }
 
     public function hasCertificate(){
@@ -142,7 +152,7 @@ class CfdiBase {
             $this->cadenaOriginal = CfdiBase::getOriginalString($this->tmp_file, $xslt);
         }
         else{
-            $xml_file = public_path()."/cfdis/".strtoupper($this->cfdi->uuid()).".xml";
+            $xml_file = $this->path."/".strtoupper($this->cfdi->uuid()).".xml";
             $this->cadenaOriginal = CfdiBase::getOriginalString($xml_file, $xslt);
         }
 
@@ -156,7 +166,7 @@ class CfdiBase {
             return $this->xml->getXML();
         }
         else{
-            return file_get_contents(public_path()."/cfdis/".strtoupper($this->cfdi->uuid()).".xml");
+            return file_get_contents($this->path."/".strtoupper($this->cfdi->uuid()).".xml");
         }
     }
 
