@@ -10,7 +10,7 @@ Para iniciar la instalación de la libreria es necesario agregar la dependencia 
 ```js
 {
     "require": {
-        "raalveco/ciberfactura": "dev-master"
+        "raalveco/ciberfactura": "1.0.*"
     }
 }
 ```
