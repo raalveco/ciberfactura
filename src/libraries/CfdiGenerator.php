@@ -42,12 +42,10 @@
             $comprobante->agregarAtributo("tipoDeComprobante", $cfdi->tipoDeComprobante ? strtolower($cfdi->tipoDeComprobante) : "ingreso");
 
             if(isset($cfdi->numCtaPago) && $cfdi->numCtaPago){
-                $comprobante->agregarAtributo("numCtaPago", $cfdi->numCtaPago ? substr($cfdi->numCtaPago,strlen($cfdi->numCtaPago) - 4) : "");
+                $comprobante->agregarAtributo("NumCtaPago", $cfdi->numCtaPago ? substr($cfdi->numCtaPago,strlen($cfdi->numCtaPago) - 4) : "");
             }
 
-            if(isset($cfdi->moneda) && $cfdi->moneda){
-                $comprobante->agregarAtributo("moneda", $cfdi->moneda ? $cfdi->moneda : "");
-            }
+            $comprobante->agregarAtributo("moneda", $cfdi->moneda ? $cfdi->moneda : "MXN");
 
             if(isset($cfdi->tipoCambio) && $cfdi->tipoCambio && $cfdi->tipoCambio != 1){
                 $comprobante->agregarAtributo("tipoCambio", $cfdi->tipoCambio ? number_format($cfdi->tipoCambio,2,".","") : "");
