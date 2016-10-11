@@ -199,7 +199,7 @@ class CfdiBase {
     }
 
     public static function getPrivateKey ( $key_path, $password ){
-        $cmd = 'openssl pkcs8 -inform DER -in '.$key_path.' -passin pass:'.$password;
+        $cmd = "openssl pkcs8 -inform DER -in ".$key_path." -passin pass:'".$password."'";
         if ( $result = shell_exec( $cmd ) ) {
             unset( $cmd );
             return $result;
