@@ -246,8 +246,10 @@ class CfdiBase {
 
         foreach($result as $line){
             if(strpos($line, 'subject')){
-                //Valida si no tiene sucursal, por lo tanto es una FIEL
-                if(strpos($line, "OU=") === false){
+                if(strpos($line, "OU=") >= 0){
+                    $type = "CSD";
+                }
+                else{
                     $type = "FIEL";
                 }
             }
