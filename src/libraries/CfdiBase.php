@@ -245,8 +245,8 @@ class CfdiBase {
         $type = "CSD";
 
         foreach($result as $line){
-            if(strpos($line, 'subject') == 0){
-                if(strpos($line, "OU=") >= 0){
+            if(strpos($line, 'subject') === 0){
+                if(strpos($line, "OU=") !== false){
                     $type = "CSD";
                 }
                 else{
