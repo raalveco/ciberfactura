@@ -252,6 +252,8 @@ class CfdiBase {
                 else{
                     $type = "FIEL";
                 }
+
+                break;
             }
         }
 
