@@ -229,7 +229,8 @@ class CfdiBase {
                 "rfc" => "",
                 "serial" => "",
                 "start_date" => "0000-00-00",
-                "end_date" => "0000-00-00"
+                "end_date" => "0000-00-00",
+                "type" => "CSD"
             ];
 
             return $response;
@@ -240,6 +241,17 @@ class CfdiBase {
         $result = shell_exec( $cmd );
 
         $result = explode("\n", $result);
+
+        $type = "CSD";
+
+        foreach($result as $line){
+            if(Str::startsWith($line, "subject")){
+                //Valida si no tiene sucursal, por lo tanto es una FIEL
+                if(!Str::contains($line, "OU=")){
+                    $type = "FIEL";
+                }
+            }
+        }
 
         $serial = ""; $notBefore = ""; $notAfter = ""; $rfc = "";
 
@@ -333,7 +345,8 @@ class CfdiBase {
             "rfc" => $rfc,
             "serial" => $serial_number,
             "start_date" => $y1."-".$m1."-".$d1,
-            "end_date" => $y2."-".$m2."-".$d2
+            "end_date" => $y2."-".$m2."-".$d2,
+            "type" => $type
         ];
 
         return $response;
