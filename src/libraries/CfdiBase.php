@@ -245,9 +245,9 @@ class CfdiBase {
         $type = "CSD";
 
         foreach($result as $line){
-            if(Str::startsWith($line, "subject")){
+            if(strpos($line, 'subject')){
                 //Valida si no tiene sucursal, por lo tanto es una FIEL
-                if(!Str::contains($line, "OU=")){
+                if(strpos($line, "OU=") === false){
                     $type = "FIEL";
                 }
             }
