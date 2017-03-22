@@ -103,8 +103,8 @@
             //Receptor - Domicilio Fiscal
             $domicilio = new CfdiNodo("cfdi:Domicilio");
             if($cfdi_receptor->calle) $domicilio->agregarAtributo("calle", $cfdi_receptor->calle);
-            if($cfdi_receptor->exterior) $domicilio->agregarAtributo("noExterior", $cfdi_receptor->noExterior);
-            if($cfdi_receptor->interior) $domicilio->agregarAtributo("noInterior", $cfdi_receptor->noInterior);
+            if($cfdi_receptor->noExterior) $domicilio->agregarAtributo("noExterior", $cfdi_receptor->noExterior);
+            if($cfdi_receptor->noInterior) $domicilio->agregarAtributo("noInterior", $cfdi_receptor->noInterior);
 
             if($cfdi_receptor->colonia) $domicilio->agregarAtributo("colonia", $cfdi_receptor->colonia);
             if($cfdi_receptor->municipio) $domicilio->agregarAtributo("municipio", $cfdi_receptor->municipio);
