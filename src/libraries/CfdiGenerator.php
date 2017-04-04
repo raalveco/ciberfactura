@@ -47,7 +47,7 @@
 
             $comprobante->agregarAtributo("Moneda", $cfdi->moneda ? $cfdi->moneda : "MXN");
 
-            if(isset($cfdi->tipoCambio) && $cfdi->tipoCambio && $cfdi->tipoCambio != 1){
+            if(isset($cfdi->tipoCambio) && $cfdi->tipoCambio && $cfdi->tipoCambio*1 != 1 && $cfdi->tipoCambio*1 > 0){
                 $comprobante->agregarAtributo("TipoCambio", $cfdi->tipoCambio ? number_format($cfdi->tipoCambio*1,4,".","") : "");
             }
 
