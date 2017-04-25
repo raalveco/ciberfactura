@@ -20,7 +20,65 @@ class CfdiBase {
     
     public $path = false;
 
-    protected $version = "3.2";
+    protected $version = "3.3";
+
+    public function __construct(){
+        $this->production = Config::get('packages.raalveco.ciberfactura.config.production');
+        $this->path = Config::get('packages.raalveco.ciberfactura.config.path');
+
+        if(!$this->production){
+            $url_cer = str_replace("\\","/", base_path()."/".Config::get('packages.raalveco.ciberfactura.config.certificate.sandbox.cer'));
+            $url_key = str_replace("\\","/", base_path()."/".Config::get('packages.raalveco.ciberfactura.config.certificate.sandbox.key'));
+            $clave_privada = Config::get('packages.raalveco.ciberfactura.config.certificate.sandbox.password');
+        }
+        else{
+            $url_cer = str_replace("\\","/", base_path()."/".Config::get('packages.raalveco.ciberfactura.config.certificate.production.cer'));
+            $url_key = str_replace("\\","/", base_path()."/".Config::get('packages.raalveco.ciberfactura.config.certificate.production.key'));
+            $clave_privada = Config::get('packages.raalveco.ciberfactura.config.certificate.production.password');
+        }
+
+        if(!$url_cer || !$url_key || !$clave_privada){
+            throw new CfdiException("La configuración del certificado de sello digital no ha sido definida.");
+        }
+
+        if(!file_exists($url_cer) || !is_file($url_cer)){
+            throw new CfdiException("El archivo (.cer) del Certificado de Sello Digital no fue encontrado. [$url_cer]");
+        }
+
+        if(!file_exists($url_key) || !is_file($url_key)){
+            throw new CfdiException("El archivo (.key) del Certificado de Sello Digital no fue encontrado. [$url_key]");
+        }
+
+        $this->certificate = array(
+            'cer' => $url_cer,
+            'key' => $url_key,
+            'password' => $clave_privada
+        );
+
+        $certificate_number = CfdiBase::getSerialFromCertificate( $url_cer );
+
+        if(!$certificate_number){
+            throw new CfdiException("El Certificado de Sello Digital no es correcto.");
+        }
+
+        $this->noCertificado = $certificate_number;
+
+        $certificate = CfdiBase::getCertificate( $url_cer, false );
+
+        if(!$certificate){
+            throw new CfdiException("El Certificado de Sello Digital (.cer) no es correcto.");
+        }
+
+        $this->certificado = $certificate;
+
+        $key = CfdiBase::getPrivateKey($url_key, $clave_privada);
+
+        if(!$key){
+            throw new CfdiException("El Certificado de Sello Digital (.key) no es correcto o la contraseña es inválida.");
+        }
+
+        $this->key = $key;
+    }
 
     public function loadCertificate($url_cer = false, $url_key = false, $clave_privada = false){
         $this->production = Config::get('packages.raalveco.ciberfactura.config.production');
@@ -68,24 +126,6 @@ class CfdiBase {
         }
 
         $this->key = $key;
-    }
-
-    public function setProduction($production){
-        $this->production = $production;
-    }
-    
-    public function setPath($path = false){
-        if(!$path){
-            $path = public_path()."/cfdis";
-        }
-        
-        $this->path = $path;
-    }
-
-    public function hasCertificate(){
-        if(!$this->certificado || !$this->key){
-            Cfdi::loadCertificate();
-        }
     }
 
     public function validateCfdi(CfdiFactura $cfdi){
@@ -361,7 +401,7 @@ class CfdiBase {
         //$data = "|".substr($data,3);
         //$data = substr($data,0,strlen($data)-4)."||";
 
-        if ( openssl_sign( $data, $cryptedata, $pkeyid,OPENSSL_ALGO_SHA1 ) ) {
+        if ( openssl_sign( $data, $cryptedata, $pkeyid, OPENSSL_ALGO_SHA256 ) ) {
             openssl_free_key( $pkeyid );
             return base64_encode( $cryptedata );
         }
@@ -396,6 +436,23 @@ class CfdiBase {
         $original_string = str_replace("    ","",$original_string);
 
         return $original_string;
+    }
 
+    public function setProduction($production){
+        $this->production = $production;
+    }
+
+    public function setPath($path = false){
+        if(!$path){
+            $path = public_path()."/cfdis";
+        }
+
+        $this->path = $path;
+    }
+
+    public function hasCertificate(){
+        if(!$this->certificado || !$this->key){
+            Cfdi::loadCertificate();
+        }
     }
 }

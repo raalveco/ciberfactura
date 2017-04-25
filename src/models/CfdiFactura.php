@@ -4,9 +4,9 @@ namespace Raalveco\Ciberfactura\Models;
 use \Illuminate\Database\Eloquent\Model;
 
 class CfdiFactura extends Model{
-    protected $table = "cfdi_facturas";
+    protected $table = "cfdi_v33_facturas";
 
-    protected $guarded = array();
+    protected $fillable = ['version','serie','folio','fecha','forma_pago','condiciones_de_pago','sub_total','descuento','moneda','tipo_cambio','total','tipo_de_comprobante','metodo_pago', 'lugar_expedicion'];
 
     public function addEmisor($rfc, $nombre="", $calle="", $exterior="", $interior="", $colonia="", $localidad="", $municipio="", $estado="", $pais="", $cp=""){
         $this->save();

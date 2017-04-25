@@ -3,6 +3,6 @@ namespace Raalveco\Ciberfactura\Models;
 
 use \Illuminate\Database\Eloquent\Model;
 
-class CfdiComplemento extends Model{
-    protected $table = "cfdi_complementos";
+class CfdiTimbre extends Model{
+    protected $table = "cfdi_v33_timbres";
 }

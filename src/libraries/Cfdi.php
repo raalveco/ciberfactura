@@ -2,6 +2,10 @@
 namespace Raalveco\Ciberfactura\Libraries;
 
 class Cfdi extends CfdiBase{
+    public function __construct(){
+        parent::__construct();
+    }
+
     public function getInstance($production = false){
         $this->production = $production;
         return $this;

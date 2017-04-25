@@ -18,5 +18,7 @@
         ]
     },
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "lunasoft/sw-sdk-php": "dev-master"
+    }
 }
