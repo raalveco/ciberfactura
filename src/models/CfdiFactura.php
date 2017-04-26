@@ -2,203 +2,103 @@
 namespace Raalveco\Ciberfactura\Models;
 
 use \Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
+use Raalveco\Ciberfactura\Libraries\CfdiException;
 
 class CfdiFactura extends Model{
     protected $table = "cfdi_v33_facturas";
 
     protected $fillable = ['version','serie','folio','fecha','forma_pago','condiciones_de_pago','sub_total','descuento','moneda','tipo_cambio','total','tipo_de_comprobante','metodo_pago', 'lugar_expedicion'];
 
-    public function addEmisor($rfc, $nombre="", $calle="", $exterior="", $interior="", $colonia="", $localidad="", $municipio="", $estado="", $pais="", $cp=""){
-        $this->save();
+    protected static $rules = [
+        "version" => "required",
+        "fecha" => "required",
+        "sub_total" => "required",
+        "moneda" => "required",
+        "total" => "required",
+        "metodo_pago" => "required",
+        "lugar_expedicion" => "required",
+    ];
 
-        if(CfdiEmisor::whereRaw("cfdi_id = $this->id")->count() > 0){
-            $emisor = CfdiEmisor::whereRaw("cfdi_id = $this->id")->first();
+    protected static $messages = [
+        'version.required' => 'La Versión del CFDI es obligatoria.',
+        'fecha.required' => 'La Fecha del CFDI es obligatoria.',
+        'sub_total.required' => 'El SubTotal del CFDI es obligatorio.',
+        'moneda.required' => 'La Moneda del CFDI es obligatoria.',
+        'total.required' => 'El Total del CFDI es obligatorio.',
+        'metodo_pago.required' => 'El Método de Pago del CFDI es obligatorio.',
+        'lugar_expedicion.required' => 'El Lugar de Expedición (Código Postal) del CFDI es obligatorio.',
+    ];
+
+    public static function create($data){
+        $validator = Validator::make($data, CfdiFactura::$rules, CfdiFactura::$messages);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->getMessages();
+
+            if($errors){
+                foreach($errors as $error){
+                    throw new CfdiException($error[0]);
+                }
+            }
         }
-        else{
-            $emisor = new CfdiEmisor();
-        }
 
-        $emisor->cfdi_id = $this->id;
-        $emisor->rfc = $rfc;
-        $emisor->nombre = $nombre;
-        $emisor->calle = $calle;
-        $emisor->noExterior = $exterior;
-        $emisor->noInterior = $interior;
-        $emisor->colonia = $colonia;
-        $emisor->localidad = $localidad;
-        $emisor->municipio = $municipio;
-        $emisor->estado = $estado;
-        $emisor->pais = $pais;
-        $emisor->codigoPostal = $cp;
-
-        $emisor->save();
-
-        return $emisor;
+        return static::query()->create($data);
     }
 
-    public function addReceptor($rfc, $nombre="", $calle="", $exterior="", $interior="", $colonia="", $localidad="", $municipio="", $estado="", $pais="", $cp=""){
-        $this->save();
-
-        if(CfdiReceptor::whereRaw("cfdi_id = $this->id")->count() > 0){
-            $receptor = CfdiReceptor::whereRaw("cfdi_id = $this->id")->first();
-        }
-        else{
-            $receptor = new CfdiReceptor();
+    public function addEmisor($data){
+        if(!isset($data['cfdi_id'])){
+            $data['cfdi_id'] = $this->id;
         }
 
-        $receptor->cfdi_id = $this->id;
-        $receptor->rfc = $rfc;
-        $receptor->nombre = $nombre;
-        $receptor->calle = $calle;
-        $receptor->noExterior = $exterior;
-        $receptor->noInterior = $interior;
-        $receptor->colonia = $colonia;
-        $receptor->localidad = $localidad;
-        $receptor->municipio = $municipio;
-        $receptor->estado = $estado;
-        $receptor->pais = $pais;
-        $receptor->codigoPostal = $cp;
-
-        $receptor->save();
-
-        return $receptor;
+        return CfdiEmisor::create($data);
     }
 
-    public function addConcepto($cantidad, $unidad, $descripcion, $precio, $importe){
-        $concepto = new CfdiConcepto();
-
-        $concepto->cfdi_id = $this->id;
-        $concepto->cantidad = $cantidad;
-        $concepto->unidad = $unidad;
-        $concepto->descripcion = $descripcion;
-        $concepto->valorUnitario = $precio;
-        $concepto->importe = $importe;
-
-        $concepto->save();
-
-        return $concepto;
-    }
-
-    public function addImpuesto($tipo, $impuesto_name, $tasa, $importe){
-        $impuesto = new CfdiImpuesto();
-
-        $impuesto->cfdi_id = $this->id;
-        $impuesto->tipo = $tipo;
-        $impuesto->impuesto = $impuesto_name;
-        $impuesto->tasa = $tasa;
-        $impuesto->importe = $importe;
-
-        $impuesto->save();
-
-        return $impuesto;
-    }
-
-    public function addRegimen($regimen_name){
-        $regimen = new CfdiRegimen();
-
-        $regimen->cfdi_id = $this->id;
-        $regimen->regimen = $regimen_name   ;
-
-        $regimen->save();
-
-        return $regimen;
-    }
-
-    public function addSucursal($calle="", $exterior="", $interior="", $colonia="", $localidad="", $municipio="", $estado="", $pais="", $cp=""){
-        $this->save();
-
-        if(CfdiSucursal::whereRaw("cfdi_id = $this->id")->count() > 0){
-            $sucursal = CfdiSucursal::whereRaw("cfdi_id = $this->id")->first();
-        }
-        else{
-            $sucursal = new CfdiSucursal();
+    public function addReceptor($data){
+        if(!isset($data['cfdi_id'])){
+            $data['cfdi_id'] = $this->id;
         }
 
-        $sucursal->cfdi_id = $this->id;
-        $sucursal->calle = $calle;
-        $sucursal->noExterior = $exterior;
-        $sucursal->noInterior = $interior;
-        $sucursal->colonia = $colonia;
-        $sucursal->localidad = $localidad;
-        $sucursal->municipio = $municipio;
-        $sucursal->estado = $estado;
-        $sucursal->pais = $pais;
-        $sucursal->codigoPostal = $cp;
-
-        $sucursal->save();
-
-        return $sucursal;
+        return CfdiReceptor::create($data);
     }
 
-    public function addComplemento($version, $uuid, $fecha, $selloCFD, $certificadoSAT, $selloSAT){
-        $this->uuid = $uuid;
-        $this->save();
-
-        if(CfdiComplemento::whereRaw("cfdi_id = $this->id")->count() > 0){
-            $complemento = CfdiComplemento::whereRaw("cfdi_id = $this->id")->first();
-        }
-        else{
-            $complemento = new CfdiComplemento();
+    public function addConcepto($data){
+        if(!isset($data['cfdi_id'])){
+            $data['cfdi_id'] = $this->id;
         }
 
-        $complemento->cfdi_id = $this->id;
-        $complemento->version = $version;
-        $complemento->UUID = $uuid;
-        $complemento->fechaTimbrado = $fecha;
-        $complemento->selloCFD = $selloCFD;
-        $complemento->noCertificadoSAT = $certificadoSAT;
-        $complemento->selloSAT = $selloSAT;
-
-        $complemento->save();
-
-        return $complemento;
+        return CfdiConcepto::create($data);
     }
 
     public function emisor(){
-        return CfdiEmisor::whereRaw("cfdi_id = $this->id")->first();
+        return $this->hasOne('Raalveco\Ciberfactura\Models\CfdiEmisor', 'cfdi_id');
     }
 
     public function receptor(){
-        return CfdiReceptor::whereRaw("cfdi_id = $this->id")->first();
+        return $this->hasOne('Raalveco\Ciberfactura\Models\CfdiReceptor', 'cfdi_id');
     }
 
     public function conceptos(){
-        return CfdiConcepto::whereRaw("cfdi_id = $this->id")->get();
-    }
-
-    public function concepts(){
         return $this->hasMany('Raalveco\Ciberfactura\Models\CfdiConcepto', 'cfdi_id');
     }
 
     public function impuestos(){
-        return CfdiImpuesto::whereRaw("cfdi_id = $this->id")->get();
-    }
-
-    public function taxes(){
         return $this->hasMany('Raalveco\Ciberfactura\Models\CfdiImpuesto', 'cfdi_id');
     }
 
-    public function regimen(){
-        return CfdiRegimen::whereRaw("cfdi_id = $this->id")->first();
-    }
+    public static function validate($data, $rules, $messages){
+        $validator = Validator::make($data, $rules, $messages);
 
-    public function regimenes(){
-        return CfdiRegimen::whereRaw("cfdi_id = $this->id")->get();
-    }
+        if ($validator->fails()) {
+            $errors = $validator->errors()->getMessages();
 
-    public function sucursal(){
-        return CfdiSucursal::whereRaw("cfdi_id = $this->id")->first();
-    }
+            if($errors){
+                foreach($errors as $error){
+                    throw new CfdiException($error[0]);
+                }
+            }
 
-    public function complemento(){
-        return CfdiComplemento::whereRaw("cfdi_id = $this->id")->first();
-    }
-
-    public function uuid(){
-        if($this->complemento()){
-            return $this->complemento()->UUID;
+            return Redirect::back();
         }
-
-        return false;
     }
 }

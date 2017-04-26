@@ -80,104 +80,42 @@ class CfdiBase {
         $this->key = $key;
     }
 
-    public function loadCertificate($url_cer = false, $url_key = false, $clave_privada = false){
-        $this->production = Config::get('packages.raalveco.ciberfactura.config.production');
-
-        if(!$url_cer){
-            $url_cer = str_replace("\\","/", base_path()."/".Config::get('packages.raalveco.ciberfactura.config.certificate.cer'));
-            $url_key = str_replace("\\","/", base_path()."/".Config::get('packages.raalveco.ciberfactura.config.certificate.key'));
-            $clave_privada = Config::get('packages.raalveco.ciberfactura.config.certificate.password');
-        }
-
-        if(!file_exists($url_cer) || !is_file($url_cer)){
-            throw new CfdiException("El archivo (.cer) del Certificado de Sello Digital no fue encontrado. [$url_cer]");
-        }
-
-        if(!file_exists($url_key) || !is_file($url_key)){
-            throw new CfdiException("El archivo (.key) del Certificado de Sello Digital no fue encontrado. [$url_key]");
-        }
-
-        $this->certificate = array(
-            'cer' => $url_cer,
-            'key' => $url_key,
-            'password' => $clave_privada
-        );
-
-        $certificate_number = CfdiBase::getSerialFromCertificate( $url_cer );
-
-        if(!$certificate_number){
-            throw new CfdiException("El Certificado de Sello Digital no es correcto.");
-        }
-
-        $this->noCertificado = $certificate_number;
-
-        $certificate = CfdiBase::getCertificate( $url_cer, false );
-
-        if(!$certificate){
-            throw new CfdiException("El Certificado de Sello Digital (.cer) no es correcto.");
-        }
-
-        $this->certificado = $certificate;
-
-        $key = CfdiBase::getPrivateKey($url_key, $clave_privada);
-
-        if(!$key){
-            throw new CfdiException("El Certificado de Sello Digital (.key) no es correcto o la contraseña es inválida.");
-        }
-
-        $this->key = $key;
-    }
-
-    public function validateCfdi(CfdiFactura $cfdi){
-        $emisor = $cfdi->emisor();
-
-        if(!$emisor){
-            $cfdi->delete();
+    public function validate(CfdiFactura $cfdi){
+        if(!$cfdi->emisor){
             throw new CfdiException("El emisor de la factura (Cfdi) no ha sido definido.");
         }
 
-        $receptor = $cfdi->receptor();
-
-        if(!$receptor){
-            $cfdi->delete();
+        if(!$cfdi->receptor){
             throw new CfdiException("El receptor de la factura (Cfdi) no ha sido definido.");
         }
 
-        $conceptos = $cfdi->conceptos();
+        $conceptos = $cfdi->conceptos()->count();
 
-        if(count($conceptos) == 0){
-            $cfdi->delete();
-            throw new CfdiException("La factura (Cfdi) debe contener al menos un concepto que facturar.");
-        }
-
-        $regimenes = $cfdi->regimenes();
-
-        if(count($regimenes) == 0){
-            $cfdi->delete();
-            throw new CfdiException("La factura (Cfdi) debe contener al menos un regimen del contribuyente.");
+        if($conceptos == 0){
+            throw new CfdiException("La factura (Cfdi) debe contener al menos un concepto a facturar.");
         }
     }
 
-    public function loadCfdi(CfdiFactura $cfdi){
+    public function load(CfdiFactura $cfdi){
+        $this->validate($cfdi);
+
         if(!$this->path){
             $this->path = public_path()."/cfdis";
         }
-        
-        $this->hasCertificate();
-        $this->validateCfdi($cfdi);
 
         $this->cfdi = $cfdi;
-        $this->rfc = $cfdi->emisor()->rfc;
+        $this->rfc = $cfdi->emisor->rfc;
 
         $this->cfdi->noCertificado = $this->noCertificado;
         $this->cfdi->certificado = $this->certificado;
 
-        $xslt = __DIR__.'/../resources/xslt/cadenaoriginal_3_2.xslt';
+        $xslt = __DIR__.'/../resources/xslt/cadenaoriginal_3_3.xslt';
 
         if(!file_exists($xslt)){
-            $cfdi->delete();
             throw new CfdiException("El archivo xslt para necesario para formar la cadena original de la factura no existe en la ruta definida. [$xslt]");
         }
+
+        dd($this);
 
         if(CfdiComplemento::whereRaw("cfdi_id = $cfdi->id")->count() == 0){
             if(!file_exists(Config::get('packages.raalveco.ciberfactura.config.path_xmls'))){
@@ -448,11 +386,5 @@ class CfdiBase {
         }
 
         $this->path = $path;
-    }
-
-    public function hasCertificate(){
-        if(!$this->certificado || !$this->key){
-            Cfdi::loadCertificate();
-        }
     }
 }
