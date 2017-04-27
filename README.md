@@ -40,40 +40,9 @@ Este comando además de crear el archivo de configuración `config/packages/raal
 
 Para que la configuración funcione de manera adecuada debemos definir las variables de ambiente en nuestro archivo .env con sus apropiados valores.
 
-```php
-<?php
-
-return array(
-    'production' => env('CFDI_PRODUCTION', false),
-    'certificate' => array(
-        'cer' => env('CFDI_CERTIFICATE_CER', 'config/packages/raalveco/ciberfactura/certificate/aad990814bp7_1210261233s.cer'),
-        'key' => env('CFDI_CERTIFICATE_KEY', 'config/packages/raalveco/ciberfactura/certificate/aad990814bp7_1210261233s.key'),
-        'password' => env('CFDI_CERTIFICATE_PRIVATE_KEY', '12345678a')
-    ),
-    'wsdl' => array(
-        'sandbox' => array(
-            'autentificacion' => 'http://pruebascfdi.smartweb.com.mx/Autenticacion/wsAutenticacion.asmx?wsdl',
-            'timbrado' => 'http://pruebascfdi.smartweb.com.mx/Timbrado/wsTimbrado.asmx?wsdl',
-            'cancelacion' => 'http://pruebascfdi.smartweb.com.mx/Cancelacion/wsCancelacion.asmx?wsdl',
-            'usuario' => 'demo',
-            'password' => '123456789',
-        ),
-        'production' => array(
-            'autentificacion' => 'https://cfdi.smartweb.com.mx/Autenticacion/wsAutenticacion.asmx?wsdl',
-            'timbrado' => 'https://cfdi.smartweb.com.mx/Timbrado/wsTimbrado.asmx?wsdl',
-            'cancelacion' => 'https://cfdi.smartweb.com.mx/Cancelacion/wsCancelacion.asmx?wsdl',
-            'usuario' => env('SMART_WEB_USER', ''),
-            'password' => env('SMART_WEB_PASSWORD', ''),
-        )
-    ),
-    'path_xmls' => public_path().'/cfdis'
-);
-
-```
-
 Esta libreria servira para emitir facturas con Smarter Web, el cual es un proveedor autorizado de certificación del SAT.
 
-###Migrations
+## Migrations
 
 Antes de probar el funcionamiento de la libreria, es necesario ejecutar los migrations que crearán las tablas donde se almacenan los CFDIs.
 
@@ -81,7 +50,7 @@ Antes de probar el funcionamiento de la libreria, es necesario ejecutar los migr
 php artisan migrate
 ```
 
-###Código de Ejemplo
+## Código de Ejemplo
 
 ```php
     $factura = CfdiFactura::create(
