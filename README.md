@@ -2,10 +2,6 @@
 
 Libreria que simplifica el proceso de creación y timbrado de CFDIs v3.3
 
-## Estado Actual
-
-[![Build Status](https://travis-ci.org/raalveco/ciberfactura.svg?branch=master)](https://travis-ci.org/raalveco/ciberfactura)
-
 ## Instalación
 
 Para iniciar la instalación de la libreria es necesario agregar la dependencia en nuestro composer.json en la raíz de Laravel.
