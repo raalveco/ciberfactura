@@ -12,164 +12,217 @@
 
             //Comprobante
             $comprobante = new CfdiNodo("cfdi:Comprobante");
-            $comprobante->agregarAtributo("xsi:schemaLocation", "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd");
-            $comprobante->agregarAtributo("xsi:schemaLocation", "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd");
+            $comprobante->agregarAtributo("xsi:schemaLocation", "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd http://www.sat.gob.mx/sitio_internet/cfd/catalogos http://www.sat.gob.mx/sitio_internet/cfd/catalogos/catCFDI.xsd http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI/tdCFDI.xsd");
+            $comprobante->agregarAtributo("xmlns:tdCFDI", "http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI");
+            $comprobante->agregarAtributo("xmlns:catCFDI", "http://www.sat.gob.mx/sitio_internet/cfd/catalogos");
             $comprobante->agregarAtributo("xmlns:cfdi", "http://www.sat.gob.mx/cfd/3");
             $comprobante->agregarAtributo("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-            $comprobante->agregarAtributo("version", "3.2");
+
+            $comprobante->agregarAtributo("Version", $cfdi->version);
 
             if($cfdi->serie){
-                $comprobante->agregarAtributo("serie", $cfdi->serie);
+                $comprobante->agregarAtributo("Serie", $cfdi->serie);
             }
-            
+
             if($cfdi->folio){
-                $comprobante->agregarAtributo("folio", $cfdi->folio);
+                $comprobante->agregarAtributo("Folio", $cfdi->folio);
             }
 
-            $comprobante->agregarAtributo("fecha", date("Y-m-d")."T".date("H:i:s"));
+            $comprobante->agregarAtributo("Fecha", date("Y-m-d")."T".date("H:i:s"));
 
-            $comprobante->agregarAtributo("formaDePago", "PAGO EN UNA SOLA EXHIBICION");
-            $comprobante->agregarAtributo("total", number_format($cfdi->total,4,".",""));
-            $comprobante->agregarAtributo("subTotal", number_format($cfdi->subTotal,4,".",""));
+            $comprobante->agregarAtributo("FormaPago", $cfdi->forma_pago);
 
-            if($cfdi->descuento > 0){
-                $comprobante->agregarAtributo("descuento", number_format($cfdi->descuento,4,".",""));
-                $comprobante->agregarAtributo("motivoDescuento", $cfdi->motivoDescuento ? $cfdi->motivoDescuento : "Descuento General");
+            if($cfdi->condiciones_de_pago){
+                $comprobante->agregarAtributo("CondicionesDePago", $cfdi->condiciones_de_pago);
             }
 
-            $comprobante->agregarAtributo("LugarExpedicion", "MÉXICO");
-            $comprobante->agregarAtributo("metodoDePago", $cfdi->metodoPago ? $cfdi->metodoPago : "NO IDENTIFICADO");
-            $comprobante->agregarAtributo("tipoDeComprobante", $cfdi->tipoDeComprobante ? strtolower($cfdi->tipoDeComprobante) : "ingreso");
+            $comprobante->agregarAtributo("SubTotal", $cfdi->sub_total);
 
-            if(isset($cfdi->numCtaPago) && $cfdi->numCtaPago){
-                $comprobante->agregarAtributo("NumCtaPago", $cfdi->numCtaPago ? substr($cfdi->numCtaPago,strlen($cfdi->numCtaPago) - 4) : "");
+            if($cfdi->descuento){
+                $comprobante->agregarAtributo("Descuento", $cfdi->descuento);
             }
 
-            $comprobante->agregarAtributo("Moneda", $cfdi->moneda ? $cfdi->moneda : "MXN");
+            $comprobante->agregarAtributo("Moneda", $cfdi->moneda);
 
-            if(isset($cfdi->tipoCambio) && $cfdi->tipoCambio && $cfdi->tipoCambio*1 != 1 && $cfdi->tipoCambio*1 > 0){
-                $comprobante->agregarAtributo("TipoCambio", $cfdi->tipoCambio ? number_format($cfdi->tipoCambio*1,4,".","") : "");
+            if($cfdi->tipo_cambio){
+                $comprobante->agregarAtributo("TipoCambio", $cfdi->tipo_cambio);
             }
 
-            $cfdi_emisor = $cfdi->emisor();
+            $comprobante->agregarAtributo("Total", $cfdi->total);
+            $comprobante->agregarAtributo("TipoDeComprobante", $cfdi->tipo_de_comprobante);
+
+            if($cfdi->metodo_pago){
+                $comprobante->agregarAtributo("MetodoPago", $cfdi->metodo_pago);
+            }
+
+            $comprobante->agregarAtributo("LugarExpedicion", $cfdi->lugar_expedicion);
+
+            $this->cfdi = $comprobante;
+
+            $cfdi_emisor = $cfdi->emisor;
 
             //Emisor
             $emisor = new CfdiNodo("cfdi:Emisor");
-            $emisor->agregarAtributo("rfc", $cfdi_emisor->rfc);
-            $emisor->agregarAtributo("nombre", $cfdi_emisor->nombre);
+            $emisor->agregarAtributo("Rfc", $cfdi_emisor->rfc);
+            $emisor->agregarAtributo("Nombre", $cfdi_emisor->nombre);
+            $emisor->agregarAtributo("RegimenFiscal", $cfdi_emisor->regimen_fiscal);
             $comprobante->agregarNodo($emisor);
 
-            //Emisor - Domicilio Fiscal
-            $domicilioFiscal = new CfdiNodo("cfdi:DomicilioFiscal");
-            if($cfdi_emisor->calle) $domicilioFiscal->agregarAtributo("calle", $cfdi_emisor->calle);
-            if($cfdi_emisor->noExterior) $domicilioFiscal->agregarAtributo("noExterior", $cfdi_emisor->noExterior);
-            if($cfdi_emisor->noInterior) $domicilioFiscal->agregarAtributo("noInterior", $cfdi_emisor->noInterior);
-            if($cfdi_emisor->colonia) $domicilioFiscal->agregarAtributo("colonia", $cfdi_emisor->colonia);
-            if($cfdi_emisor->municipio) $domicilioFiscal->agregarAtributo("municipio", $cfdi_emisor->municipio);
-            if($cfdi_emisor->estado) $domicilioFiscal->agregarAtributo("estado", $cfdi_emisor->estado);
-            if($cfdi_emisor->pais) $domicilioFiscal->agregarAtributo("pais", $cfdi_emisor->pais);
-            if($cfdi_emisor->codigoPostal) $domicilioFiscal->agregarAtributo("codigoPostal", $cfdi_emisor->codigoPostal);
-            $emisor->agregarNodo($domicilioFiscal);
-
-            //Emisor - Expedido En
-            //Si hay sucursales, sacar datos de la sucursal, sino salen del contribuyente
-            $expedioEn = new CfdiNodo("cfdi:ExpedidoEn");
-            if($cfdi_emisor->calle) $expedioEn->agregarAtributo("calle", $cfdi_emisor->calle);
-            if($cfdi_emisor->noExterior) $expedioEn->agregarAtributo("noExterior", $cfdi_emisor->noExterior);
-            if($cfdi_emisor->noInterior) $expedioEn->agregarAtributo("noInterior", $cfdi_emisor->noInterior);
-            if($cfdi_emisor->colonia) $expedioEn->agregarAtributo("colonia", $cfdi_emisor->colonia);
-            if($cfdi_emisor->municipio) $expedioEn->agregarAtributo("municipio", $cfdi_emisor->municipio);
-            if($cfdi_emisor->estado) $expedioEn->agregarAtributo("estado", $cfdi_emisor->estado);
-            if($cfdi_emisor->pais) $expedioEn->agregarAtributo("pais", $cfdi_emisor->pais);
-            if($cfdi_emisor->codigoPostal) $expedioEn->agregarAtributo("codigoPostal", $cfdi_emisor->codigoPostal);
-            $emisor->agregarNodo($expedioEn);
-
-            //Emisor - Regimenes Fiscales
-            $cfdi_regimenes = $cfdi->regimenes();
-            if($cfdi_regimenes) foreach($cfdi_regimenes as $cfdi_regimen){
-                $regimenFiscal = new CfdiNodo("cfdi:RegimenFiscal");
-                $regimenFiscal->agregarAtributo("Regimen", $cfdi_regimen->regimen);
-                $emisor->agregarNodo($regimenFiscal);
-            }
-
-            $cfdi_receptor = $cfdi->receptor();
+            $cfdi_receptor = $cfdi->receptor;
 
             //Receptor
             $receptor = new CfdiNodo("cfdi:Receptor");
-            $receptor->agregarAtributo("rfc", $cfdi_receptor->rfc);
-            $receptor->agregarAtributo("nombre", $cfdi_receptor->nombre);
+            $receptor->agregarAtributo("Rfc", $cfdi_receptor->rfc);
+            $receptor->agregarAtributo("Nombre", $cfdi_receptor->nombre);
+
+            if($cfdi_receptor->residencia_fiscal){
+                $receptor->agregarAtributo("ResidenciaFiscal", $cfdi_receptor->residencia_fiscal);
+            }
+
+            if($cfdi_receptor->num_reg_id_trib){
+                $receptor->agregarAtributo("NumRegIdTrib", $cfdi_receptor->num_reg_id_trib);
+            }
+
+            $receptor->agregarAtributo("UsoCFDI", $cfdi_receptor->uso_cfdi);
             $comprobante->agregarNodo($receptor);
 
-            //Receptor - Domicilio Fiscal
-            $domicilio = new CfdiNodo("cfdi:Domicilio");
-            if($cfdi_receptor->calle) $domicilio->agregarAtributo("calle", $cfdi_receptor->calle);
-            if($cfdi_receptor->noExterior) $domicilio->agregarAtributo("noExterior", $cfdi_receptor->noExterior);
-            if($cfdi_receptor->noInterior) $domicilio->agregarAtributo("noInterior", $cfdi_receptor->noInterior);
-
-            if($cfdi_receptor->colonia) $domicilio->agregarAtributo("colonia", $cfdi_receptor->colonia);
-            if($cfdi_receptor->municipio) $domicilio->agregarAtributo("municipio", $cfdi_receptor->municipio);
-            if($cfdi_receptor->estado) $domicilio->agregarAtributo("estado", $cfdi_receptor->estado);
-            if($cfdi_receptor->pais) $domicilio->agregarAtributo("pais", $cfdi_receptor->pais);
-            if($cfdi_receptor->codigoPostal) $domicilio->agregarAtributo("codigoPostal", $cfdi_receptor->codigoPostal);
-            $receptor->agregarNodo($domicilio);
-
-            $cfdi_conceptos = $cfdi->conceptos();
+            $cfdi_conceptos = $cfdi->conceptos;
 
             //Conceptos
             $conceptos = new CfdiNodo("cfdi:Conceptos");
 
             if($cfdi_conceptos) foreach($cfdi_conceptos as $cfdi_concepto){
                 $concepto = new CfdiNodo("cfdi:Concepto");
-                $concepto->agregarAtributo("cantidad", $cfdi_concepto->cantidad);
-                $concepto->agregarAtributo("unidad", $cfdi_concepto->unidad);
-                $concepto->agregarAtributo("descripcion", $cfdi_concepto->descripcion);
-                $concepto->agregarAtributo("valorUnitario", number_format($cfdi_concepto->valorUnitario,4,".",""));
-                $concepto->agregarAtributo("importe", number_format($cfdi_concepto->importe,4,".",""));
+
+                $concepto->agregarAtributo("ClaveProdServ", $cfdi_concepto->clave_prod_serv);
+
+                if($cfdi_concepto->no_identificacion){
+                    $concepto->agregarAtributo("NoIdentificacion", $cfdi_concepto->no_identificacion);
+                }
+
+                $concepto->agregarAtributo("Cantidad", $cfdi_concepto->cantidad);
+                $concepto->agregarAtributo("ClaveUnidad", $cfdi_concepto->clave_unidad);
+
+                if($cfdi_concepto->unidad){
+                    $concepto->agregarAtributo("Unidad", $cfdi_concepto->unidad);
+                }
+
+                $concepto->agregarAtributo("Descripcion", $cfdi_concepto->descripcion);
+                $concepto->agregarAtributo("ValorUnitario", $cfdi_concepto->valor_unitario);
+                $concepto->agregarAtributo("Importe", $cfdi_concepto->importe);
+
+                if($cfdi_concepto->descuento){
+                    $concepto->agregarAtributo("Descuento", $cfdi_concepto->descuento);
+                }
+
+                $impuestos = new CfdiNodo("cfdi:Impuestos");
+
+                $traslados = new CfdiNodo("cfdi:Traslados");
+                $retenciones = new CfdiNodo("cfdi:Retenciones");
+
+                $cfdi_impuestos = $cfdi_concepto->impuestos;
+
+                if($cfdi_impuestos) foreach($cfdi_impuestos as $cfdi_impuesto){
+                    if($cfdi_impuesto->type == "traslado"){
+                        $traslado = new CfdiNodo("cfdi:Traslado");
+
+                        $traslado->agregarAtributo("Base", $cfdi_impuesto->base);
+                        $traslado->agregarAtributo("Impuesto", $cfdi_impuesto->impuesto);
+                        $traslado->agregarAtributo("TipoFactor", $cfdi_impuesto->tipo_factor);
+
+                        if($cfdi_impuesto->tipo_factor == "Tasa" || $cfdi_impuesto->tipo_factor == "Cuota"){
+                            $traslado->agregarAtributo("TasaOCuota", $cfdi_impuesto->tasa_o_cuota);
+                            $traslado->agregarAtributo("Importe", $cfdi_impuesto->importe);
+                        }
+
+                        $traslados->agregarNodo($traslado);
+                    }
+
+                    if($cfdi_impuesto->type == "retencion"){
+                        $retencion = new CfdiNodo("cfdi:Retencion");
+
+                        $retencion->agregarAtributo("Base", $cfdi_impuesto->base);
+                        $retencion->agregarAtributo("Impuesto", $cfdi_impuesto->impuesto);
+                        $retencion->agregarAtributo("TipoFactor", $cfdi_impuesto->tipo_factor);
+
+                        if($cfdi_impuesto->tipo_factor == "Tasa" || $cfdi_impuesto->tipo_factor == "Cuota"){
+                            $retencion->agregarAtributo("TasaOCuota", $cfdi_impuesto->tasa_o_cuota);
+                            $retencion->agregarAtributo("Importe", $cfdi_impuesto->importe);
+                        }
+
+                        $retenciones->agregarNodo($retencion);
+                    }
+                }
+
+                if(count($traslados->nodos) > 0){
+                    $impuestos->agregarNodo($traslados);
+                }
+
+                if(count($retenciones->nodos) > 0){
+                    $impuestos->agregarNodo($retenciones);
+                }
+
+                if(count($impuestos->nodos) > 0){
+                    $concepto->agregarNodo($impuestos);
+                }
+
                 $conceptos->agregarNodo($concepto);
             }
 
             $comprobante->agregarNodo($conceptos);
 
-            $cfdi_impuestos = $cfdi->impuestos();
-
-            $total_trasladados = 0;
-            $total_retenidos = 0;
-
             $impuestos = new CfdiNodo("cfdi:Impuestos");
-            $traslados = new CfdiNodo("cfdi:Traslados");
-            $retenidos = new CfdiNodo("cfdi:Retenciones");
 
-            if($cfdi_impuestos) foreach($cfdi_impuestos as $cfdi_impuesto){
-                if(strtoupper($cfdi_impuesto->tipo) == "TRASLADADO" || strtoupper($cfdi_impuesto->tipo) == "TRASLADO"){
-                    $total_trasladados += $cfdi_impuesto->importe;
+            $codigos_traslado = $cfdi->impuestos()->where("type","traslado")->groupBy("impuesto")->pluck("impuesto");
+            $codigos_retencion = $cfdi->impuestos()->where("type","retencion")->groupBy("impuesto")->pluck("impuesto");
+
+            if($codigos_retencion->count() > 0){
+                $retenciones = new CfdiNodo("cfdi:Retenciones");
+
+                $retenciones_total = 0;
+
+                foreach($codigos_retencion as $codigo){
+                    $importe = $cfdi->impuestos()->where("type","retencion")->where("impuesto", $codigo)->sum("importe");
+
+                    $retencion = new CfdiNodo("cfdi:Retencion");
+                    $retencion->agregarAtributo("Impuesto", $codigo);
+                    $retencion->agregarAtributo("Importe", $importe);
+
+                    $retenciones->agregarNodo($retencion);
+
+                    $retenciones_total += $importe;
+                }
+
+                $impuestos->agregarAtributo("TotalImpuestosRetenidos", $retenciones_total);
+                $impuestos->agregarNodo($retenciones);
+            }
+
+            if($codigos_traslado->count() > 0){
+                $traslados = new CfdiNodo("cfdi:Traslados");
+
+                $traslados_total = 0;
+
+                $cfdi_impuestos = $cfdi->impuestos()->where("type","traslado")->get();
+
+                foreach($cfdi_impuestos as $impuesto){
+
 
                     $traslado = new CfdiNodo("cfdi:Traslado");
-                    $traslado->agregarAtributo("tasa", number_format($cfdi_impuesto->tasa,2,".",""));
-                    $traslado->agregarAtributo("importe", number_format($cfdi_impuesto->importe,4,".",""));
-                    $traslado->agregarAtributo("impuesto", $cfdi_impuesto->impuesto);
+                    $traslado->agregarAtributo("Impuesto", $impuesto->impuesto);
+                    $traslado->agregarAtributo("TipoFactor", $impuesto->tipo_factor);
+
+                    if($impuesto->tipo_factor == "Tasa" || $impuesto->tipo_factor == "Cuota"){
+                        $traslado->agregarAtributo("TasaOCuota", $impuesto->tasa_o_cuota);
+                        $traslado->agregarAtributo("Importe", $impuesto->importe);
+                    }
 
                     $traslados->agregarNodo($traslado);
+
+                    $traslados_total += $importe;
                 }
-                else{
-                    $total_retenidos += $cfdi_impuesto->importe;
 
-                    $retenido = new CfdiNodo("cfdi:Retencion");
-                    $retenido->agregarAtributo("impuesto", $cfdi_impuesto->impuesto);
-                    $retenido->agregarAtributo("importe", number_format($cfdi_impuesto->importe,4,".",""));
-
-                    $retenidos->agregarNodo($retenido);
-                }
-            }
-
-            //Impuestos
-            if($total_retenidos>0){
-                $impuestos->agregarNodo($retenidos);
-                $impuestos->agregarAtributo("totalImpuestosRetenidos", number_format($total_retenidos,4,".",""));
-            }
-
-            if($total_trasladados>0){
+                $impuestos->agregarAtributo("TotalImpuestosTrasladados", $traslados_total);
                 $impuestos->agregarNodo($traslados);
-                $impuestos->agregarAtributo("totalImpuestosTrasladados", number_format($total_trasladados,4,".",""));
             }
 
             $comprobante->agregarNodo($impuestos);
@@ -202,9 +255,9 @@
         }
 
         public function sellar($sello, $noCertificado, $certificado){
-            $this->cfdi->agregarAtributo("sello", $sello);
-            $this->cfdi->agregarAtributo("noCertificado", $noCertificado);
-            $this->cfdi->agregarAtributo("certificado", $certificado);
+            $this->cfdi->agregarAtributo("Sello", $sello);
+            $this->cfdi->agregarAtributo("NoCertificado", $noCertificado);
+            $this->cfdi->agregarAtributo("Certificado", $certificado);
         }
 
         public function getXML($format = true){

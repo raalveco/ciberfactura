@@ -2,6 +2,8 @@
     namespace Raalveco\Ciberfactura\Libraries;
 
     use Illuminate\Support\Facades\Config;
+    use SWServices\Authentication\AuthenticationService as Authentication;
+    use SWServices\Stamp\StampService as StampService;
 
     class CfdiTimbrador implements CfdiTimbradoInterface{
         private $soap_autentificar;
@@ -22,26 +24,40 @@
         private $url_cancelar;
 
         public function __construct($rfc, $certificate, $production = false){
-            $this->rfc = $rfc;
-
             if($production){
-                $this->url_autentificar = Config::get('packages.raalveco.ciberfactura.config.wsdl.production.autentificacion');
-                $this->url_timbrar = Config::get('packages.raalveco.ciberfactura.config.wsdl.production.timbrado');
-                $this->url_cancelar = Config::get('packages.raalveco.ciberfactura.config.wsdl.production.cancelacion');
+                $this->endpoint = Config::get('packages.raalveco.ciberfactura.config.wsdl.production.endpoint');
 
                 $this->usuario = Config::get('packages.raalveco.ciberfactura.config.wsdl.production.usuario');
                 $this->password = Config::get('packages.raalveco.ciberfactura.config.wsdl.production.password');
             }
             else{
-                $this->url_autentificar = Config::get('packages.raalveco.ciberfactura.config.wsdl.sandbox.autentificacion');
-                $this->url_timbrar = Config::get('packages.raalveco.ciberfactura.config.wsdl.sandbox.timbrado');
-                $this->url_cancelar = Config::get('packages.raalveco.ciberfactura.config.wsdl.sandbox.cancelacion');
-
+                $this->endpoint = Config::get('packages.raalveco.ciberfactura.config.wsdl.sandbox.endpoint');
                 $this->usuario = Config::get('packages.raalveco.ciberfactura.config.wsdl.sandbox.usuario');
                 $this->password = Config::get('packages.raalveco.ciberfactura.config.wsdl.sandbox.password');
             }
 
-            if(!$this->url_autentificar || !$this->url_timbrar || !$this->url_cancelar){
+            $this->rfc = $rfc;
+
+            $params = [
+                "url" => $this->endpoint,
+                "user" => $this->usuario,
+                "password"=> $this->password
+            ];
+
+            try{
+
+                $auth = Authentication::auth($params);
+
+                $token = json_decode($auth::Token())->data->token;
+
+                $this->token = $token;
+
+            }
+            catch(\Exception $e){
+                throw new CfdiException($e->getMessage());
+            }
+
+            if(!$this->endpoint){
                 throw new CfdiException("Las rutas de los wsdl de conexión con el PAC de timbrado no son válidos.");
             }
 
@@ -49,30 +65,25 @@
             $url_key = $certificate["key"];
             $clave_privada = $certificate["password"];
 
-            $this->soap_autentificar = new \SoapClient($this->url_autentificar, array("trace" => 1, "exception" => 0));
-            $this->soap_timbrar = new \SoapClient($this->url_timbrar, array("trace" => 1, "exception" => 0));
-            $this->soap_cancelar = new \SoapClient($this->url_cancelar, array("trace" => 1, "exception" => 0));
-
             $this->cer = base64_encode(file_get_contents($url_cer));
             $this->key = base64_encode(file_get_contents($url_key));
             $this->clave_privada = $clave_privada;
-
-            $token = $this->soap_autentificar->AutenticarBasico(array("usuario" => $this->usuario, "password" => $this->password));
-
-            $this->token = $token->AutenticarBasicoResult;
         }
 
         public function timbrar($xml){
+            //echo $xml; dd();
+
+            $params = [
+                "url" => $this->endpoint,
+                "token" => $this->token
+            ];
+
             try{
-                $parametros = array(
-                    'xmlComprobante' => $xml,
-                    'tokenAutenticacion' => $this->token,
-                    'password' => $this->password
-                );
+                $stamp = StampService::Set($params);
 
-                $response = $this->soap_timbrar->TimbrarXML($parametros);
+                $result = $stamp::StampV1($xml);
 
-                return $response;
+                dd($result.$xml);
             }
             catch(\Exception $e){
                 throw new CfdiException($e->getMessage());

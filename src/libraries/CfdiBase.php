@@ -1,17 +1,19 @@
 <?php
 namespace Raalveco\Ciberfactura\Libraries;
 
+use Genkgo\Xsl\XsltProcessor;
 use Illuminate\Support\Facades\Config;
 use Raalveco\Ciberfactura\Models\CfdiComplemento;
 use Raalveco\Ciberfactura\Models\CfdiFactura;
+use Raalveco\Ciberfactura\Models\CfdiTimbre;
 
 class CfdiBase {
     public $xml;
-    public $cadenaOriginal;
+    public $cadena_original;
     public $sello;
     public $key;
     public $certificado;
-    public $noCertificado;
+    public $no_certificado;
     public $tmp_file;
     public $cfdi;
     public $rfc;
@@ -61,7 +63,7 @@ class CfdiBase {
             throw new CfdiException("El Certificado de Sello Digital no es correcto.");
         }
 
-        $this->noCertificado = $certificate_number;
+        $this->no_certificado = $certificate_number;
 
         $certificate = CfdiBase::getCertificate( $url_cer, false );
 
@@ -106,7 +108,7 @@ class CfdiBase {
         $this->cfdi = $cfdi;
         $this->rfc = $cfdi->emisor->rfc;
 
-        $this->cfdi->noCertificado = $this->noCertificado;
+        $this->cfdi->no_certificado = $this->no_certificado;
         $this->cfdi->certificado = $this->certificado;
 
         $xslt = __DIR__.'/../resources/xslt/cadenaoriginal_3_3.xslt';
@@ -115,11 +117,13 @@ class CfdiBase {
             throw new CfdiException("El archivo xslt para necesario para formar la cadena original de la factura no existe en la ruta definida. [$xslt]");
         }
 
-        dd($this);
-
-        if(CfdiComplemento::whereRaw("cfdi_id = $cfdi->id")->count() == 0){
-            if(!file_exists(Config::get('packages.raalveco.ciberfactura.config.path_xmls'))){
-                mkdir(Config::get('packages.raalveco.ciberfactura.config.path_xmls'));
+        if($cfdi->timbre){
+            $xml_file = $this->path."/".strtoupper($cfdi->uuid).".xml";
+            $this->cadenaOriginal = CfdiBase::getOriginalString($xml_file, $xslt);
+        }
+        else{
+            if(!file_exists(Config::get('packages.raalveco.ciberfactura.config.path'))){
+                mkdir(Config::get('packages.raalveco.ciberfactura.config.path'));
             }
 
             $this->xml = new CfdiGenerator($this->cfdi);
@@ -131,20 +135,16 @@ class CfdiBase {
             $this->tmp_file = public_path()."/temp/".strtoupper(sha1(date("Y-m-d H:i:s".rand(0,100000)))).".xml";
             $this->xml->saveFile($this->tmp_file, false);
 
-            $this->cadenaOriginal = CfdiBase::getOriginalString($this->tmp_file, $xslt);
-        }
-        else{
-            $xml_file = $this->path."/".strtoupper($this->cfdi->uuid()).".xml";
-            $this->cadenaOriginal = CfdiBase::getOriginalString($xml_file, $xslt);
+            $this->cadena_original = CfdiBase::getOriginalString($this->tmp_file, $xslt);
         }
 
-        $this->cfdi->cadenaOriginal = trim(str_replace("\n","",  str_replace("\r","",  $this->cadenaOriginal)));
+        $this->cfdi->cadena_original = trim(str_replace("\n","",  str_replace("\r","",  $this->cadena_original)));
         $this->cfdi->save();
     }
 
     public function xml(){
         $cfdi_id = $this->cfdi->id;
-        if(CfdiComplemento::whereRaw("cfdi_id = $cfdi_id")->count() == 0){
+        if(CfdiTimbre::where("cfdi_id", $cfdi_id)->count() == 0){
             return $this->xml->getXML();
         }
         else{
@@ -360,7 +360,7 @@ class CfdiBase {
     }
 
     public static function getOriginalString($xml_path, $xlst_path){
-        $xslt = new \XSLTProcessor();
+        $xslt = new XsltProcessor();
         $xsl = new \DOMDocument();
         $xml = new \DOMDocument();
 

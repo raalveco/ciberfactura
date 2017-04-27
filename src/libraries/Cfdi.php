@@ -12,7 +12,7 @@ class Cfdi extends CfdiBase{
     }
 
     public function cadenaOriginal(){
-        $cadena = $this->cadenaOriginal;
+        $cadena = $this->cadena_original;
 
         $cadena = "|".substr($cadena,3);
         $cadena = substr($cadena,0,strlen($cadena)-4)."||";
@@ -21,12 +21,12 @@ class Cfdi extends CfdiBase{
     }
 
     public function sellar(){
-        $this->sello = $this->signData($this->key, $this->cadenaOriginal);
+        $this->sello = $this->signData($this->key, $this->cadena_original);
 
         $this->cfdi->sello = $this->sello;
         $this->cfdi->save();
 
-        $this->xml->sellar($this->sello, $this->noCertificado, $this->certificado);
+        $this->xml->sellar($this->sello, $this->no_certificado, $this->certificado);
 
         return $this->sello;
     }

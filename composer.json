@@ -19,6 +19,7 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "lunasoft/sw-sdk-php": "dev-master"
+        "lunasoft/sw-sdk-php": "dev-master",
+        "genkgo/xsl": "^0.5.16"
     }
 }

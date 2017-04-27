@@ -58,11 +58,16 @@ class CfdiConcepto extends Model{
             $data['cfdi_id'] = $this->cfdi_id;
         }
 
+        if(!isset($data['cfdi_concepto_id'])){
+            $data['cfdi_concepto_id'] = $this->id;
+        }
+
         $cfdi_impuesto = CfdiImpuesto::create($data);
 
-        $this->cfdi_impuesto_id = $cfdi_impuesto->id;
-        $this->save();
-
         return $cfdi_impuesto;
+    }
+
+    public function impuestos(){
+        return $this->hasMany('Raalveco\Ciberfactura\Models\CfdiImpuesto', 'cfdi_concepto_id');
     }
 }

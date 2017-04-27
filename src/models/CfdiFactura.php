@@ -86,6 +86,10 @@ class CfdiFactura extends Model{
         return $this->hasMany('Raalveco\Ciberfactura\Models\CfdiImpuesto', 'cfdi_id');
     }
 
+    public function timbre(){
+        return $this->hasOne('Raalveco\Ciberfactura\Models\CfdiTimbre', 'cfdi_id');
+    }
+
     public static function validate($data, $rules, $messages){
         $validator = Validator::make($data, $rules, $messages);
 
