@@ -18,10 +18,10 @@ class CreateCfdisV33FacturasTable extends Migration
             $table->string('serie',25)->default("");
             $table->string('folio',20)->default("");
             $table->dateTime('fecha');
-            $table->text('sello')->default("A");
+            $table->text('sello');
             $table->string('forma_pago');
             $table->string('no_certificado',20)->nullable()->default("");
-            $table->text('certificado')->default("");
+            $table->text('certificado');
             $table->string('condiciones_de_pago')->nullable()->default("");
             $table->decimal('sub_total', 10, 2);
             $table->decimal('descuento', 10, 2)->default(0.00);
@@ -33,7 +33,7 @@ class CreateCfdisV33FacturasTable extends Migration
             $table->string('lugar_expedicion')->nullable()->default("");
 
             $table->string('uuid')->nullable()->default("");
-            $table->text('cadena_original')->default("");
+            $table->text('cadena_original');
 
             $table->timestamps();
         });

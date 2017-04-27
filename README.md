@@ -9,7 +9,7 @@ Para iniciar la instalación de la libreria es necesario agregar la dependencia 
 ```js
 {
     "require": {
-        "raalveco/ciberfactura": "beta2.0.*"
+        "raalveco/ciberfactura": "beta2.0.1"
     }
 }
 ```
@@ -33,7 +33,7 @@ Registrar el siguiente Service Provider. y Alias
 Enseguida, publicar la configuración por defecto.
 
 ```bash
-php artisan vendor:publish
+php artisan vendor:publish --provider="Raalveco\Ciberfactura\CiberfacturaServiceProvider"
 ```
 
 Este comando además de crear el archivo de configuración `config/packages/raalveco/ciberfactura/config.php`, creará un grupo de archivos con las migrations para crear las tablas necesarias para la creación de cfdis.
