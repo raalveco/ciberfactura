@@ -19,6 +19,8 @@ class CfdiBase {
     public $rfc;
     public $production = false;
     public $certificate = array();
+
+    public $timbrador;
     
     public $path = false;
 
@@ -80,6 +82,33 @@ class CfdiBase {
         }
 
         $this->key = $key;
+    }
+
+    public function setTimbrador($timbrador){
+        if(!is_object($timbrador)){
+            throw new CfdiException("El timbrador tiene que ser un objeto que implementa la interface Raalveco\\Ciberfactura\\Libraries\\CfdiTimbradoInterface.");
+        }
+
+        $implements = class_implements($timbrador);
+
+        if($implements){
+            $flag = false;
+
+            foreach($implements as $key => $value){
+                if($key == 'Raalveco\\Ciberfactura\\Libraries\\CfdiTimbradoInterface' || $value == 'Raalveco\\Ciberfactura\\Libraries\\CfdiTimbradoInterface'){
+                    $flag = true;
+                }
+            }
+
+            if(!$flag){
+                throw new CfdiException("El timbrador tiene que ser un objeto que implementa la interface Raalveco\\Ciberfactura\\Libraries\\CfdiTimbradoInterface.");
+            }
+        }
+        else{
+            throw new CfdiException("El timbrador tiene que ser un objeto que implementa la interface Raalveco\\Ciberfactura\\Libraries\\CfdiTimbradoInterface.");
+        }
+
+        $this->timbrador = $timbrador;
     }
 
     public function validate(CfdiFactura $cfdi){
@@ -148,7 +177,7 @@ class CfdiBase {
             return $this->xml->getXML();
         }
         else{
-            return file_get_contents($this->path."/".strtoupper($this->cfdi->uuid()).".xml");
+            return file_get_contents($this->path."/".strtoupper($this->cfdi->uuid).".xml");
         }
     }
 

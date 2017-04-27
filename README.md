@@ -1,21 +1,30 @@
-# Ciberfactura - Facturación Electrónica en México
+# Ciberfactura 2.0 - Facturación Electrónica en México
 
-Libreria que simplifica el proceso de creación y timbrado de CFDIs.
+Libreria que simplifica el proceso de creación y timbrado de CFDIs v3.3
+
+## Estado Actual
+
+<p align="center">
+<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
+</p>
+
 
 ## Instalación
-
 
 Para iniciar la instalación de la libreria es necesario agregar la dependencia en nuestro composer.json en la raíz de Laravel.
 
 ```js
 {
     "require": {
-        "raalveco/ciberfactura": "1.0.*"
+        "raalveco/ciberfactura": "2.0.*"
     }
 }
 ```
 
-## Laravel 5.2
+## Laravel 5.4
 
 Registrar el siguiente Service Provider. y Alias
 
@@ -72,7 +81,7 @@ return array(
 
 ```
 
-Esta libreria servira para emitir facturas con el Smartweb, el cual es un proveedor autorizado de certificación del SAT.
+Esta libreria servira para emitir facturas con Smarter Web, el cual es un proveedor autorizado de certificación del SAT.
 
 ###Migrations
 

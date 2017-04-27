@@ -70,6 +70,14 @@ class CfdiFactura extends Model{
         return CfdiConcepto::create($data);
     }
 
+    public function addTimbre($data){
+        if(!isset($data['cfdi_id'])){
+            $data['cfdi_id'] = $this->id;
+        }
+
+        return CfdiTimbre::create($data);
+    }
+
     public function emisor(){
         return $this->hasOne('Raalveco\Ciberfactura\Models\CfdiEmisor', 'cfdi_id');
     }
