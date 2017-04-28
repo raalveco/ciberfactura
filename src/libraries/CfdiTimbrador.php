@@ -28,15 +28,15 @@
                 $this->password = Config::get('packages.raalveco.ciberfactura.config.wsdl.sandbox.password');
             }
 
-            if($this->endpoint){
+            if(!$this->endpoint){
                 throw new CfdiException("No se ha definido la variable de entorno y/o configuración para el endpoint del PAC Smarter Web.");
             }
 
-            if($this->usuario){
+            if(!$this->usuario){
                 throw new CfdiException("No se ha definido la variable de entorno y/o configuración para el usuario del PAC Smarter Web.");
             }
 
-            if($this->password){
+            if(!$this->password){
                 throw new CfdiException("No se ha definido la variable de entorno y/o configuración para el password del PAC Smarter Web.");
             }
 

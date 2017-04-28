@@ -26,12 +26,9 @@ class CreateCfdisV33ConceptosTable extends Migration
             $table->decimal('importe',10,2);
             $table->decimal('descuento',10,2);
 
-            $table->integer('cfdi_impuesto_id')->unsigned()->nullable()->default(0);
-
             $table->timestamps();
 
             $table->foreign('cfdi_id')->references('id')->on('cfdi_v33_facturas')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('cfdi_impuesto_id')->references('id')->on('cfdi_v33_impuestos')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

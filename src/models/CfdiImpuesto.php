@@ -7,10 +7,11 @@ use Illuminate\Support\Facades\Validator;
 class CfdiImpuesto extends Model{
     protected $table = "cfdi_v33_impuestos";
 
-    protected $fillable = ['cfdi_id','type','base','impuesto','tipo_factor','tasa_o_cuota', 'importe'];
+    protected $fillable = ['cfdi_id','cfdi_concepto_id','type','base','impuesto','tipo_factor','tasa_o_cuota', 'importe'];
 
     protected static $rules = [
         "cfdi_id" => "required",
+        "cfdi_concepto_id" => "required",
         "type" => "required",
         "base" => "required",
         "impuesto" => "required",
@@ -19,6 +20,7 @@ class CfdiImpuesto extends Model{
 
     protected static $messages = [
         'cfdi_id.required' => 'El Cfdi al que pertenece el Impuesto es obligatorio.',
+        'cfdi_concepto_id.required' => 'El Concepto al que pertenece el Impuesto es obligatorio.',
         'type.required' => 'El Tipo del Impuesto es obligatorio.',
         'base.required' => 'La Base del Impuesto es obligatorio.',
         'impuesto.required' => 'La Clave del Impuesto es obligatorio.',
