@@ -30,6 +30,6 @@ class CreateCfdisV33ReceptoresTable extends Migration
 
     public function down()
     {
-        Schema::drop('cfdi_v33_receptores');
+        Schema::dropIfExists('cfdi_v33_receptores');
     }
 }

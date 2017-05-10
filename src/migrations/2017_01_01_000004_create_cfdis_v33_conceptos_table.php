@@ -34,6 +34,6 @@ class CreateCfdisV33ConceptosTable extends Migration
 
     public function down()
     {
-        Schema::drop('cfdi_v33_conceptos');
+        Schema::dropIfExists('cfdi_v33_conceptos');
     }
 }

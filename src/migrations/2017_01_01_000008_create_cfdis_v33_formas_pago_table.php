@@ -55,6 +55,6 @@ class CreateCfdisV33FormasPagoTable extends Migration
      */
     public function down()
     {
-        Schema::drop('cfdi_v33_formas_pago');
+        Schema::dropIfExists('cfdi_v33_formas_pago');
     }
 }

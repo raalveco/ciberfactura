@@ -109,6 +109,6 @@ class CreateCfdisV33UnidadesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('cfdi_v33_unidades');
+        Schema::dropIfExists('cfdi_v33_unidades');
     }
 }

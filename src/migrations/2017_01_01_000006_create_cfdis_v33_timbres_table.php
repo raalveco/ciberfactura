@@ -32,6 +32,6 @@ class CreateCfdisV33TimbresTable extends Migration
 
     public function down()
     {
-        Schema::drop('cfdi_v33_timbres');
+        Schema::dropIfExists('cfdi_v33_timbres');
     }
 }

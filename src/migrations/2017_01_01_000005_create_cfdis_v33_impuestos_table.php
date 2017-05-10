@@ -34,6 +34,6 @@ class CreateCfdisV33ImpuestosTable extends Migration
 
     public function down()
     {
-        Schema::drop('cfdi_v33_impuestos');
+        Schema::dropIfExists('cfdi_v33_impuestos');
     }
 }

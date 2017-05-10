@@ -38,6 +38,6 @@ class CreateCfdisV33MetodosPagoTable extends Migration
      */
     public function down()
     {
-        Schema::drop('cfdi_v33_metodos_pago');
+        Schema::dropIfExists('cfdi_v33_metodos_pago');
     }
 }

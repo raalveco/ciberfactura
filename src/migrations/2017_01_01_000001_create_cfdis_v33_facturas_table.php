@@ -41,6 +41,6 @@ class CreateCfdisV33FacturasTable extends Migration
 
     public function down()
     {
-        Schema::drop('cfdi_v33_facturas');
+        Schema::dropIfExists('cfdi_v33_facturas');
     }
 }
