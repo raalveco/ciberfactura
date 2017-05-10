@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Raalveco\Ciberfactura\Models\CfdiFormaPago;
+use Raalveco\Ciberfactura\Models\Catalogs\CfdiFormaPago;
 
 class CreateCfdisV33FormasPagoTable extends Migration
 {
@@ -14,7 +14,7 @@ class CreateCfdisV33FormasPagoTable extends Migration
      */
     public function up()
     {
-        Schema::create('cfdi_v33_formas_pago', function(Blueprint $table)
+        Schema::create('cfdi_v33_cat_formas_pago', function(Blueprint $table)
         {
             $table->engine = 'InnoDB';
 

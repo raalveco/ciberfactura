@@ -3,9 +3,9 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Raalveco\Ciberfactura\Models\Catalogs\CfdiMetodoPago;
+use Raalveco\Ciberfactura\Models\Catalogs\CfdiImpuesto;
 
-class CreateCfdisV33MetodosPagoTable extends Migration
+class CreateCfdisV33ImpuestosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class CreateCfdisV33MetodosPagoTable extends Migration
      */
     public function up()
     {
-        Schema::create('cfdi_v33_cat_metodos_pago', function(Blueprint $table)
+        Schema::create('cfdi_v33_cat_impuestos', function(Blueprint $table)
         {
             $table->engine = 'InnoDB';
 
@@ -26,9 +26,9 @@ class CreateCfdisV33MetodosPagoTable extends Migration
             $table->timestamps();
         });
 
-        CfdiMetodoPago::create(["code" => "PUE", "name" => "Pago en una sola exhibición"]);
-        CfdiMetodoPago::create(["code" => "PIP", "name" => "Pago Inicial y Parcialidades"]);
-        CfdiMetodoPago::create(["code" => "PPD", "name" => "Pago en Parcialidades o Diferido"]);
+        CfdiImpuesto::create(["code" => "ISR", "name" => "Pago en una sola exhibición"]);
+        CfdiImpuesto::create(["code" => "IVA", "name" => "Pago Inicial y Parcialidades"]);
+        CfdiImpuesto::create(["code" => "IEPS", "name" => "Pago en Parcialidades o Diferido"]);
     }
 
     /**
@@ -38,6 +38,6 @@ class CreateCfdisV33MetodosPagoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cfdi_v33_metodos_pago');
+        Schema::dropIfExists('cfdi_v33_impuestos');
     }
 }
