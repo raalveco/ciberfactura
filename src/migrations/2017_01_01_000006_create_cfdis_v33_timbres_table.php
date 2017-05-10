@@ -19,6 +19,8 @@ class CreateCfdisV33TimbresTable extends Migration
             $table->string('version');
             $table->string('uuid');
             $table->datetime('fecha_timbrado');
+            $table->string('rfc_prov_certif');
+            $table->text('sello_cfd');
             $table->string('no_certificado_sat');
             $table->text('sello_sat');
 
@@ -30,6 +32,6 @@ class CreateCfdisV33TimbresTable extends Migration
 
     public function down()
     {
-        Schema::drop('cfdi_v33_timbres');
+        Schema::dropIfExists('cfdi_v33_timbres');
     }
 }

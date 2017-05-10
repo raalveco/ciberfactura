@@ -1,6 +1,8 @@
 <?php
 namespace Raalveco\Ciberfactura\Libraries;
 
+use Illuminate\Support\Str;
+
 class Cfdi extends CfdiBase{
     public function __construct(){
         parent::__construct();
@@ -32,24 +34,33 @@ class Cfdi extends CfdiBase{
     }
 
     public function timbrar(){
-        $timbrador = new CfdiTimbrador($this->rfc, $this->certificate, $this->production);
-
         try {
-            $response = $timbrador->timbrar($this->xml->getXML());
+            $timbre = $this->timbrador->timbrar($this->xml->getXML());
 
-            $tmp = substr($response->TimbrarXMLResult, strpos($response->TimbrarXMLResult, 'xsi:schemaLocation="') + 20);
-            $tmp = substr($tmp, 0, strpos($tmp, '"'));
+            if(!$timbre || !is_object($timbre) || get_class($timbre) != 'Raalveco\\Ciberfactura\\Libraries\\CfdiStamp'){
+                throw new CfdiException("El timbrador tiene que ser un objeto de la clase Raalveco\\Ciberfactura\\Libraries\\CfdiStamp.");
+            }
 
-            $timbre = simplexml_load_string($response->TimbrarXMLResult);
-            $timbre[0]["schemaLocation"] = str_replace('"', '', $tmp);
+            $this->cfdi->addTimbre([
+                'version' => $timbre->version,
+                'uuid' => $timbre->uuid,
+                'fecha_timbrado' => str_replace("T"," ", $timbre->fecha_timbrado),
+                'rfc_prov_certif' => $timbre->rfc,
+                'sello_cfd' => $timbre->sello_cfd,
+                'no_certificado_sat' => $timbre->no_certificado_sat,
+                'sello_sat' => $timbre->sello_sat
+            ]);
 
-            $this->cfdi->addComplemento($timbre[0]["version"], strtoupper($timbre[0]["UUID"]), $timbre[0]["FechaTimbrado"], $timbre[0]["selloCFD"], $timbre[0]["noCertificadoSAT"], $timbre[0]["selloSAT"]);
             $this->xml->timbrar($timbre);
 
-            return strtoupper($timbre[0]["UUID"]);
+            $this->cfdi->uuid = $timbre->uuid;
+            $this->cfdi->save();
+
+            $this->guardar();
+
+            return $timbre->uuid;
         }
         catch(\Exception $e){
-            $this->cfdi->delete();
             throw $e;
 
             return;
@@ -58,13 +69,7 @@ class Cfdi extends CfdiBase{
 
     public function cancelar(){
         try{
-            $timbrador = new CfdiTimbrador($this->rfc, $this->certificate, $this->production);
-
-            $response = $timbrador->cancelar($this->uuid());
-
-            file_put_contents(public_path()."/cfdis/".strtoupper($this->cfdi->uuid())."_ACUSE_CANCELACION.xml",$response);
-
-            return $response;
+            return $this->timbrador->cancelar($this->cfdi->uuid);
         }
         catch(CfdiException $e){
             throw $e;
@@ -73,7 +78,7 @@ class Cfdi extends CfdiBase{
 
     public function guardar($path = false){
         if(!$path){
-            $this->xml->saveFile(public_path()."/cfdis/".strtoupper($this->cfdi->uuid()).".xml");
+            $this->xml->saveFile(public_path()."/cfdis/".strtoupper($this->cfdi->uuid).".xml");
         }
         else{
             $this->xml->saveFile($path);

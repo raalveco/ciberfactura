@@ -1,21 +1,20 @@
-# Ciberfactura - Facturación Electrónica en México
+# Ciberfactura 2.0 - Facturación Electrónica en México
 
-Libreria que simplifica el proceso de creación y timbrado de CFDIs.
+Libreria que simplifica el proceso de creación y timbrado de CFDIs v3.3
 
 ## Instalación
-
 
 Para iniciar la instalación de la libreria es necesario agregar la dependencia en nuestro composer.json en la raíz de Laravel.
 
 ```js
 {
     "require": {
-        "raalveco/ciberfactura": "1.0.*"
+        "raalveco/ciberfactura": "2.0.0-beta.3"
     }
 }
 ```
 
-## Laravel 5.2
+## Laravel 5.4
 
 Registrar el siguiente Service Provider. y Alias
 
@@ -34,47 +33,16 @@ Registrar el siguiente Service Provider. y Alias
 Enseguida, publicar la configuración por defecto.
 
 ```bash
-php artisan vendor:publish
+php artisan vendor:publish --provider="Raalveco\Ciberfactura\CiberfacturaServiceProvider"
 ```
 
 Este comando además de crear el archivo de configuración `config/packages/raalveco/ciberfactura/config.php`, creará un grupo de archivos con las migrations para crear las tablas necesarias para la creación de cfdis.
 
 Para que la configuración funcione de manera adecuada debemos definir las variables de ambiente en nuestro archivo .env con sus apropiados valores.
 
-```php
-<?php
+Esta libreria servira para emitir facturas con Smarter Web, el cual es un proveedor autorizado de certificación del SAT.
 
-return array(
-    'production' => env('CFDI_PRODUCTION', false),
-    'certificate' => array(
-        'cer' => env('CFDI_CERTIFICATE_CER', 'config/packages/raalveco/ciberfactura/certificate/aad990814bp7_1210261233s.cer'),
-        'key' => env('CFDI_CERTIFICATE_KEY', 'config/packages/raalveco/ciberfactura/certificate/aad990814bp7_1210261233s.key'),
-        'password' => env('CFDI_CERTIFICATE_PRIVATE_KEY', '12345678a')
-    ),
-    'wsdl' => array(
-        'sandbox' => array(
-            'autentificacion' => 'http://pruebascfdi.smartweb.com.mx/Autenticacion/wsAutenticacion.asmx?wsdl',
-            'timbrado' => 'http://pruebascfdi.smartweb.com.mx/Timbrado/wsTimbrado.asmx?wsdl',
-            'cancelacion' => 'http://pruebascfdi.smartweb.com.mx/Cancelacion/wsCancelacion.asmx?wsdl',
-            'usuario' => 'demo',
-            'password' => '123456789',
-        ),
-        'production' => array(
-            'autentificacion' => 'https://cfdi.smartweb.com.mx/Autenticacion/wsAutenticacion.asmx?wsdl',
-            'timbrado' => 'https://cfdi.smartweb.com.mx/Timbrado/wsTimbrado.asmx?wsdl',
-            'cancelacion' => 'https://cfdi.smartweb.com.mx/Cancelacion/wsCancelacion.asmx?wsdl',
-            'usuario' => env('SMART_WEB_USER', ''),
-            'password' => env('SMART_WEB_PASSWORD', ''),
-        )
-    ),
-    'path_xmls' => public_path().'/cfdis'
-);
-
-```
-
-Esta libreria servira para emitir facturas con el Smartweb, el cual es un proveedor autorizado de certificación del SAT.
-
-###Migrations
+## Migrations
 
 Antes de probar el funcionamiento de la libreria, es necesario ejecutar los migrations que crearán las tablas donde se almacenan los CFDIs.
 
@@ -82,90 +50,97 @@ Antes de probar el funcionamiento de la libreria, es necesario ejecutar los migr
 php artisan migrate
 ```
 
-###Código de Ejemplo
+## Código de Ejemplo
 
 ```php
-    $factura = CfdiFactura::create(
-        array(
-            "serie" => "A",
-            "folio" => 234,
-            "fecha" => date("Y-m-d H:i:s"),
-            "subTotal" => 200,
-            "total" => 232.0
-        )
-    );
+    DB::beginTransaction();
 
-    $factura->addEmisor(
-        "AAD990814BP7",
-        "EMPRESA PRUEBAS SA DE CV",
-        "Independencia",
-        "54",
-        "",
-        "Centro",
-        "Ameca",
-        "Ameca",
-        "Jalisco",
-        "Mexico",
-        "46600"
-    );
+    $cfdi_factura = CfdiFactura::create([
+        'version' => 3.3,
+        'serie' => 'AS',
+        'folio' => '3972',
+        'fecha' => str_replace(" ", "T", date("Y-m-d H:i:s")),
+        'forma_pago' => "03",
+        'sub_total' => 1000,
+        'descuento' => 0,
+        'moneda' => 'MXN',
+        'total' => 1000,
+        'tipo_de_comprobante' => 'I',
+        'metodo_pago' => 'PUE',
+        'lugar_expedicion' => '46600',
+        'condiciones_de_pago' => 'Condiciones No Definidas'
+    ]);
 
-    $factura->addReceptor(
-        "PEGJ801021H4K",
-        "Juan Pérez González",
-        "Juarez",
-        "56",
-        "3A",
-        "Centro",
-        "Guadalajara",
-        "Guadalajara",
-        "Jalisco",
-        "Mexico",
-        "44460"
-    );
+    $cfdi_factura->addEmisor([
+        'rfc' => 'AAA010101AAA',
+        'nombre' => 'ACCEM SERVICIOS EMPRESARIALES SC',
+        'regimen_fiscal' => '601'
+    ]);
 
-    $factura->addConcepto(
-        1,
-        "Año",
-        "Servicio de Facturación Electrónica",
-        100.00,
-        100.00
-    );
+    $cfdi_factura->addReceptor([
+        'rfc' => 'VECR8307073J1',
+        'nombre' => 'Ramiro Alonso Vera Contreras',
+        'residencia_fiscal' => 'MEX',
+        'num_reg_id_trib' => '',
+        'uso_cfdi' => 'G03'
+    ]);
 
-    $factura->addConcepto(
-        1,
-        "Año",
-        "Servicio de Timbrado de Facturas Electrónicas",
-        100.00,
-        100.00
-    );
+    $cfdi_concepto = $cfdi_factura->addConcepto([
+        'cfdi_id' => $cfdi_factura->id,
+        'clave_prod_serv' => '10151810',
+        'no_identificacion' => '',
+        'cantidad' => 5,
+        'clave_unidad' => 'E49',
+        'unidad' => 'Litro',
+        'descripcion' => 'Concepto de Prueba 1',
+        'valor_unitario' => 100.00,
+        'importe' => 500.00,
+        'descuento' => 0.00
+    ]);
 
-    $factura->addImpuesto(
-        "Traslado",
-        "IVA",
-        16.00,
-        32.00
-    );
+    $cfdi_concepto->addImpuesto([
+        'cfdi_id' => $cfdi_factura->id,
+        'type' => 'retencion',
+        'base' => 500.00,
+        'impuesto' => '001',
+        'tipo_factor' => 'Tasa',
+        'tasa_o_cuota' => 0.1600,
+        'importe' => 80.00
+    ]);
 
-    $factura->addSucursal(
-        "Av. Revolución",
-        "212",
-        "",
-        "Centro",
-        "Ameca",
-        "Ameca",
-        "Jalisco",
-        "Mexico",
-        "46600"
-    );
+    $cfdi_concepto = $cfdi_factura->addConcepto([
+        'cfdi_id' => $cfdi_factura->id,
+        'clave_prod_serv' => '10151810',
+        'no_identificacion' => '',
+        'cantidad' => 5,
+        'clave_unidad' => 'E49',
+        'unidad' => 'Litro',
+        'descripcion' => 'Concepto de Prueba 2',
+        'valor_unitario' => 100.00,
+        'importe' => 500.00,
+        'descuento' => 0.00
+    ]);
 
-    $factura->addRegimen("Regimen General para Personas Morales");
+    $cfdi_concepto->addImpuesto([
+        'type' => 'traslado',
+        'base' => 500.00,
+        'impuesto' => '002',
+        'tipo_factor' => 'Tasa',
+        'tasa_o_cuota' => 0.1600,
+        'importe' => 80.00
+    ]);
 
-    Cfdi::loadCfdi($factura);
-    $sello = Cfdi::sellar();
-    $uuid = Cfdi::timbrar();
+    $cfdi = new Cfdi();
+    $cfdi->setTimbrador(new CfdiTimbrador($cfdi->rfc, $cfdi->certificate, $cfdi->production));
 
-    Cfdi::guardar();
+    $cfdi->load($cfdi_factura);
 
-    $xml = Cfdi::xml();
+    $sello = $cfdi->sellar();
+
+    $uuid = $cfdi->timbrar();
+
+    $xml = $cfdi->xml();
+
+    DB::commit();
 
 ```

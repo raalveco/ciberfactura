@@ -15,6 +15,7 @@ class CreateCfdisV33ImpuestosTable extends Migration
             $table->increments('id');
 
             $table->integer('cfdi_id')->unsigned();
+            $table->integer('cfdi_concepto_id')->unsigned();
 
             $table->string('type')->default("traslado");
 
@@ -27,11 +28,12 @@ class CreateCfdisV33ImpuestosTable extends Migration
             $table->timestamps();
 
             $table->foreign('cfdi_id')->references('id')->on('cfdi_v33_facturas')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('cfdi_concepto_id')->references('id')->on('cfdi_v33_conceptos')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::drop('cfdi_v33_impuestos');
+        Schema::dropIfExists('cfdi_v33_impuestos');
     }
 }

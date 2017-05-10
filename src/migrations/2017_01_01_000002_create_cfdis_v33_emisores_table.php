@@ -28,6 +28,6 @@ class CreateCfdisV33EmisoresTable extends Migration
 
     public function down()
     {
-        Schema::drop('cfdi_v33_emisores');
+        Schema::dropIfExists('cfdi_v33_emisores');
     }
 }
