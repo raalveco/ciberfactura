@@ -14,7 +14,7 @@ class CreateCfdisV33ReceptoresTable extends Migration
 
             $table->increments('id');
 
-            $table->integer('cfdi_id')->unsigned();
+            $table->unsignedInteger('cfdi_id');
 
             $table->string('rfc',13);
             $table->string('nombre')->nullable();

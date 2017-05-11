@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Raalveco\Ciberfactura\Models\Catalogs\CfdiMoneda;
 
-class CreateCfdisV33MonedasTable extends Migration
+class CreateCfdisV33CatalogoMonedasTable extends Migration
 {
     /**
      * Run the migrations.

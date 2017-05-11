@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Raalveco\Ciberfactura\Models\Catalogs\CfdiUnidad;
 
-class CreateCfdisV33UnidadesTable extends Migration
+class CreateCfdisV33CatalogoUnidadesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -1767,6 +1767,6 @@ class CreateCfdisV33UnidadesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cfdi_v33_unidades');
+        Schema::dropIfExists('cfdi_v33_cat_unidades');
     }
 }

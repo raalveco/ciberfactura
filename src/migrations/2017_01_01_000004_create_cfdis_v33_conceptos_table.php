@@ -14,7 +14,7 @@ class CreateCfdisV33ConceptosTable extends Migration
 
             $table->increments('id');
 
-            $table->integer('cfdi_id')->unsigned();
+            $table->unsignedInteger('cfdi_id');
 
             $table->string('clave_prod_serv');
             $table->string('no_identificacion')->nullable();

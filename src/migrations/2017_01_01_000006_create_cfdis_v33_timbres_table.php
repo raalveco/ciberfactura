@@ -14,7 +14,7 @@ class CreateCfdisV33TimbresTable extends Migration
 
             $table->increments('id');
 
-            $table->integer('cfdi_id')->unsigned();
+            $table->unsignedInteger('cfdi_id');
 
             $table->string('version');
             $table->string('uuid');

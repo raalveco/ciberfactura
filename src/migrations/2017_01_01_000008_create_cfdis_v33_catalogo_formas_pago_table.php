@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Raalveco\Ciberfactura\Models\Catalogs\CfdiFormaPago;
 
-class CreateCfdisV33FormasPagoTable extends Migration
+class CreateCfdisV33CatalogoFormasPagoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -55,6 +55,6 @@ class CreateCfdisV33FormasPagoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cfdi_v33_formas_pago');
+        Schema::dropIfExists('cfdi_v33_cat_formas_pago');
     }
 }

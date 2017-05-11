@@ -14,8 +14,8 @@ class CreateCfdisV33ImpuestosTable extends Migration
 
             $table->increments('id');
 
-            $table->integer('cfdi_id')->unsigned();
-            $table->integer('cfdi_concepto_id')->unsigned();
+            $table->unsignedInteger('cfdi_id');
+            $table->unsignedInteger('cfdi_concepto_id');
 
             $table->string('type')->default("traslado");
 
