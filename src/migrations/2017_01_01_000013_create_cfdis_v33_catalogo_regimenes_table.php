@@ -23,30 +23,33 @@ class CreateCfdisV33CatalogoRegimenesTable extends Migration
             $table->string('code');
             $table->string('name');
 
+            $table->boolean('physical');
+            $table->boolean('moral');
+
             $table->timestamps();
         });
 
-        CfdiRegimen::create(["code" => "601", "name" => "General de Ley Personas Morales"]);
-        CfdiRegimen::create(["code" => "603", "name" => "Personas Morales con Fines no Lucrativos"]);
-        CfdiRegimen::create(["code" => "605", "name" => "Sueldos y Salarios e Ingresos Asimilados a Salarios"]);
-        CfdiRegimen::create(["code" => "606", "name" => "Arrendamiento"]);
-        CfdiRegimen::create(["code" => "608", "name" => "Demás ingresos"]);
-        CfdiRegimen::create(["code" => "609", "name" => "Consolidación"]);
-        CfdiRegimen::create(["code" => "610", "name" => "Residentes en el Extranjero sin Establecimiento Permanente en México"]);
-        CfdiRegimen::create(["code" => "611", "name" => "Ingresos por Dividendos (socios y accionistas)"]);
-        CfdiRegimen::create(["code" => "612", "name" => "Personas Físicas con Actividades Empresariales y Profesionales"]);
-        CfdiRegimen::create(["code" => "614", "name" => "Ingresos por intereses"]);
-        CfdiRegimen::create(["code" => "616", "name" => "Sin obligaciones fiscales"]);
-        CfdiRegimen::create(["code" => "620", "name" => "Sociedades Cooperativas de Producción que optan por diferir sus ingresos"]);
-        CfdiRegimen::create(["code" => "621", "name" => "Incorporación Fiscal"]);
-        CfdiRegimen::create(["code" => "622", "name" => "Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras"]);
-        CfdiRegimen::create(["code" => "623", "name" => "Opcional para Grupos de Sociedades"]);
-        CfdiRegimen::create(["code" => "624", "name" => "Coordinados"]);
-        CfdiRegimen::create(["code" => "628", "name" => "Hidrocarburos"]);
-        CfdiRegimen::create(["code" => "607", "name" => "Régimen de Enajenación o Adquisición de Bienes"]);
-        CfdiRegimen::create(["code" => "629", "name" => "De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales"]);
-        CfdiRegimen::create(["code" => "630", "name" => "Enajenación de acciones en bolsa de valores"]);
-        CfdiRegimen::create(["code" => "615", "name" => "Régimen de los ingresos por obtención de premios"]);
+        CfdiRegimen::create(["code" => "601", 'physical' => 0, 'moral' => 1, "name" => "General de Ley Personas Morales"]);
+        CfdiRegimen::create(["code" => "603", 'physical' => 0, 'moral' => 1, "name" => "Personas Morales con Fines no Lucrativos"]);
+        CfdiRegimen::create(["code" => "605", 'physical' => 1, 'moral' => 0, "name" => "Sueldos y Salarios e Ingresos Asimilados a Salarios"]);
+        CfdiRegimen::create(["code" => "606", 'physical' => 1, 'moral' => 0, "name" => "Arrendamiento"]);
+        CfdiRegimen::create(["code" => "608", 'physical' => 1, 'moral' => 0, "name" => "Demás ingresos"]);
+        CfdiRegimen::create(["code" => "609", 'physical' => 0, 'moral' => 1, "name" => "Consolidación"]);
+        CfdiRegimen::create(["code" => "610", 'physical' => 1, 'moral' => 1, "name" => "Residentes en el Extranjero sin Establecimiento Permanente en México"]);
+        CfdiRegimen::create(["code" => "611", 'physical' => 1, 'moral' => 0, "name" => "Ingresos por Dividendos (socios y accionistas)"]);
+        CfdiRegimen::create(["code" => "612", 'physical' => 1, 'moral' => 0, "name" => "Personas Físicas con Actividades Empresariales y Profesionales"]);
+        CfdiRegimen::create(["code" => "614", 'physical' => 1, 'moral' => 0, "name" => "Ingresos por intereses"]);
+        CfdiRegimen::create(["code" => "616", 'physical' => 1, 'moral' => 0, "name" => "Sin obligaciones fiscales"]);
+        CfdiRegimen::create(["code" => "620", 'physical' => 0, 'moral' => 1, "name" => "Sociedades Cooperativas de Producción que optan por diferir sus ingresos"]);
+        CfdiRegimen::create(["code" => "621", 'physical' => 1, 'moral' => 0, "name" => "Incorporación Fiscal"]);
+        CfdiRegimen::create(["code" => "622", 'physical' => 1, 'moral' => 1, "name" => "Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras"]);
+        CfdiRegimen::create(["code" => "623", 'physical' => 0, 'moral' => 1, "name" => "Opcional para Grupos de Sociedades"]);
+        CfdiRegimen::create(["code" => "624", 'physical' => 0, 'moral' => 1, "name" => "Coordinados"]);
+        CfdiRegimen::create(["code" => "628", 'physical' => 0, 'moral' => 1, "name" => "Hidrocarburos"]);
+        CfdiRegimen::create(["code" => "607", 'physical' => 0, 'moral' => 1, "name" => "Régimen de Enajenación o Adquisición de Bienes"]);
+        CfdiRegimen::create(["code" => "629", 'physical' => 1, 'moral' => 0, "name" => "De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales"]);
+        CfdiRegimen::create(["code" => "630", 'physical' => 1, 'moral' => 0, "name" => "Enajenación de acciones en bolsa de valores"]);
+        CfdiRegimen::create(["code" => "615", 'physical' => 1, 'moral' => 0, "name" => "Régimen de los ingresos por obtención de premios"]);
     }
 
     /**
