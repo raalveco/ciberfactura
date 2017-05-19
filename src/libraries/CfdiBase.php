@@ -61,8 +61,6 @@ class CfdiBase {
 
         $certificate_number = CfdiBase::getSerialFromCertificate( $url_cer );
 
-        dd($certificate_number);
-
         if(!$certificate_number){
             throw new CfdiException("El Certificado de Sello Digital no es correcto.");
         }
@@ -379,11 +377,7 @@ class CfdiBase {
     public static function getSerialFromCertificate ( $cer_path ){
         $cmd = 'openssl x509 -inform DER -outform PEM -in '.$cer_path.' -pubkey | '.'openssl x509 -serial -noout';
 
-        dd($cmd);
-
         if ( $serial = shell_exec( $cmd ) ) {
-            dd($serial);
-
             unset( $cmd );
             if ( preg_match( "/([0-9]{40})/", $serial, $match ) ) {
                 unset( $serial );
