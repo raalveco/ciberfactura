@@ -5,7 +5,7 @@ use \Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 
 class CfdiImpuesto extends Model{
-    protected $table = "cfdi_v33_impuestos";
+    protected $table = "cfdi_v33_cat_impuestos";
 
     protected $fillable = ['cfdi_id','cfdi_concepto_id','type','base','impuesto','tipo_factor','tasa_o_cuota', 'importe'];
 
