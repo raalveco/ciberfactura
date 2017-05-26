@@ -23,12 +23,15 @@ class CreateCfdisV33CatalogoImpuestosTable extends Migration
             $table->string('code');
             $table->string('name');
 
+            $table->boolean('traslado')->default(true);
+            $table->boolean('retencion')->default(true);
+
             $table->timestamps();
         });
 
-        CfdiImpuesto::create(["code" => "ISR", "name" => "Pago en una sola exhibición"]);
-        CfdiImpuesto::create(["code" => "IVA", "name" => "Pago Inicial y Parcialidades"]);
-        CfdiImpuesto::create(["code" => "IEPS", "name" => "Pago en Parcialidades o Diferido"]);
+        CfdiImpuesto::create(["code" => "ISR", "name" => "ISR", "traslado" => false, "retecion" => true]);
+        CfdiImpuesto::create(["code" => "IVA", "name" => "IVA", "traslado" => true, "retecion" => true]);
+        CfdiImpuesto::create(["code" => "IEPS", "name" => "IEPS", "traslado" => true, "retecion" => true]);
     }
 
     /**
