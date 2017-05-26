@@ -1,5 +1,5 @@
 <?php
-namespace Raalveco\Ciberfactura\Models;
+namespace Raalveco\Ciberfactura\Models\V33;
 
 use \Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
