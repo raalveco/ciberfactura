@@ -19,6 +19,18 @@ class CfdiFactura extends Model{
     }
 
     public function conceptos(){
-        return $this->hasOne('Raalveco\Ciberfactura\Models\V32\CfdiConcepto', 'cfdi_id');
+        return $this->hasMany('Raalveco\Ciberfactura\Models\V32\CfdiConcepto', 'cfdi_id');
+    }
+
+    public function impuestos(){
+        return $this->hasMany('Raalveco\Ciberfactura\Models\V32\CfdiImpuesto', 'cfdi_id');
+    }
+
+    public function sucursal(){
+        return $this->hasOne('Raalveco\Ciberfactura\Models\V32\CfdiSucursal', 'cfdi_id');
+    }
+
+    public function complemento(){
+        return $this->hasOne('Raalveco\Ciberfactura\Models\V32\CfdiComplemento', 'cfdi_id');
     }
 }
