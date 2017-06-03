@@ -18,7 +18,7 @@ class CreateCfdisV32ImpuestosTable extends Migration
 
             $table->string('tipo')->default("traslado");
             $table->string('impuesto', 5)->default("IVA");
-            $table->decimal('tasa',6,2)->nulleable();
+            $table->decimal('tasa',6,2)->nullable();
             $table->decimal('importe',12,4);
 
             $table->timestamps();

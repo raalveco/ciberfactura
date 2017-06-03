@@ -18,7 +18,7 @@ class CreateCfdisV32ConceptosTable extends Migration
 
             $table->decimal('cantidad',12,4);
             $table->string('unidad');
-            $table->string('no_identificacion')->nulleable();
+            $table->string('no_identificacion')->nullable();
             $table->text('descripcion');
             $table->decimal('valor_unitario',12,4);
             $table->decimal('importe',12,4);

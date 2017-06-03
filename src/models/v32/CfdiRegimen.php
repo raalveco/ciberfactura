@@ -8,5 +8,5 @@ use Raalveco\Ciberfactura\Libraries\CfdiException;
 class CfdiRegimen extends Model{
     protected $table = "cfdi_v32_regimenes";
 
-    protected $fillable = ['id', 'cfdi_id'];
+    protected $fillable = ['id', 'cfdi_id', 'regimen'];
 }

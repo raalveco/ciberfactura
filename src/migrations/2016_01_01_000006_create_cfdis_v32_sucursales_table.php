@@ -16,16 +16,16 @@ class CreateCfdisV32SucursalesTable extends Migration
 
             $table->unsignedInteger('cfdi_id');
 
-            $table->string('calle')->nulleable();
-            $table->string('no_exterior', 50)->nulleable();
-            $table->string('no_interior', 50)->nulleable();
-            $table->string('colonia')->nulleable();
-            $table->string('localidad')->nulleable();
-            $table->string('referencia')->nulleable();
-            $table->string('municipio')->nulleable();
-            $table->string('estado', 50)->nulleable();
-            $table->string('pais')->default("MEXICO")->nulleable();
-            $table->string('codigo_postal',5)->nulleable();
+            $table->string('calle')->nullable()->default("");
+            $table->string('no_exterior', 50)->nullable()->default("");
+            $table->string('no_interior', 50)->nullable()->default("");
+            $table->string('colonia')->nullable()->default("");
+            $table->string('localidad')->nullable()->default("");
+            $table->string('referencia')->nullable()->default("");
+            $table->string('municipio')->nullable()->default("");
+            $table->string('estado', 50)->nullable()->default("");
+            $table->string('pais')->default("MEXICO")->nullable()->default("");
+            $table->string('codigo_postal',5)->nullable()->default("");
 
             $table->timestamps();
 

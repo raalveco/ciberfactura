@@ -9,5 +9,5 @@ use Raalveco\Ciberfactura\Libraries\CfdiException;
 class CfdiConcepto extends Model{
     protected $table = "cfdi_v32_conceptos";
 
-    protected $fillable = ['id', 'cfdi_id'];
+    protected $fillable = ['id', 'cfdi_id', 'cantidad', 'unidad', 'no_identificacion', 'descripcion', 'valor_unitario', 'importe'];
 }
