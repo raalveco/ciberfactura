@@ -27,19 +27,25 @@ class CfdiBase {
     protected $version = "3.3";
 
     public function __construct(){
+        $this->certificate = [];
         $this->production = Config::get('packages.raalveco.ciberfactura.config.production');
-        $this->path = Config::get('packages.raalveco.ciberfactura.config.path');
 
-        if(!$this->production){
-            $url_cer = str_replace("\\","/", base_path()."/".Config::get('packages.raalveco.ciberfactura.config.certificate.sandbox.cer'));
-            $url_key = str_replace("\\","/", base_path()."/".Config::get('packages.raalveco.ciberfactura.config.certificate.sandbox.key'));
-            $clave_privada = Config::get('packages.raalveco.ciberfactura.config.certificate.sandbox.password');
-        }
-        else{
-            $url_cer = str_replace("\\","/", base_path()."/".Config::get('packages.raalveco.ciberfactura.config.certificate.production.cer'));
-            $url_key = str_replace("\\","/", base_path()."/".Config::get('packages.raalveco.ciberfactura.config.certificate.production.key'));
-            $clave_privada = Config::get('packages.raalveco.ciberfactura.config.certificate.production.password');
-        }
+        $url_cer = str_replace("\\","/", base_path()).Config::get('packages.raalveco.ciberfactura.config.certificate.sandbox.cer');
+        $url_key = str_replace("\\","/", base_path()).Config::get('packages.raalveco.ciberfactura.config.certificate.sandbox.key');
+        $clave_privada = Config::get('packages.raalveco.ciberfactura.config.certificate.sandbox.password');
+
+        $this->noCertificado = CfdiBase::getSerialFromCertificate( $url_cer );
+
+        $this->certificado = CfdiBase::getCertificate( $url_cer, false );
+        $this->key = CfdiBase::getPrivateKey($url_key, $clave_privada);
+    }
+
+    public function loadCertificate($certificate = []){
+        $url_cer = $certificate["cer"];
+        $url_key = $certificate["key"];
+        $clave_privada = $certificate["password"];
+
+        $this->noCertificado = $certificate["serial_number"];
 
         if(!$url_cer || !$url_key || !$clave_privada){
             throw new CfdiException("La configuración del certificado de sello digital no ha sido definida.");
@@ -52,6 +58,9 @@ class CfdiBase {
         if(!file_exists($url_key) || !is_file($url_key)){
             throw new CfdiException("El archivo (.key) del Certificado de Sello Digital no fue encontrado. [$url_key]");
         }
+
+        $this->certificado = CfdiBase::getCertificate( $url_cer, false );
+        $this->key = CfdiBase::getPrivateKey($url_key, $clave_privada);
 
         $this->certificate = array(
             'cer' => $url_cer,
@@ -206,7 +215,7 @@ class CfdiBase {
     }
 
     public static function getPrivateKey ( $key_path, $password ){
-        $cmd = "openssl pkcs8 -inform DER -in ".$key_path." -passin pass:'".$password."'";
+        $cmd = 'openssl pkcs8 -inform DER -in '.$key_path.' -passin pass:'.$password;
         if ( $result = shell_exec( $cmd ) ) {
             unset( $cmd );
             return $result;
@@ -253,6 +262,8 @@ class CfdiBase {
 
         foreach($result as $line){
             if(strpos($line, 'subject') === 0){
+                $line = str_replace(" ", "", $line);
+
                 if(strpos($line, "OU=") !== false){
                     $type = "CSD";
                 }
@@ -288,9 +299,15 @@ class CfdiBase {
             }
 
             if(strpos($line, "subject") !== false){
+                $line = str_replace(" ", "", $line);
+
                 $line = substr($line, strpos($line, "UniqueIdentifier=") + 17);
 
                 $rfc = trim(substr($line, 0, strpos($line, "/")));
+
+                if(!$rfc){
+                    $rfc = trim(substr($line, 0, strpos($line, ",")));
+                }
             }
 
             if($serial != "" && $notBefore != "" && $notAfter != "" && $rfc != ""){

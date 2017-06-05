@@ -20,33 +20,79 @@ class CfdiBase {
 
     protected $version = "3.2";
 
-    public function __construct(CfdiFactura $cfdi, $certificate = array(), $production = false){
-        $this->certificate = $certificate;
-        $this->production = $production;
+    public function __construct(){
+        $this->certificate = [];
+        $this->production = Config::get('packages.raalveco.ciberfactura.config.production');
 
+        $url_cer = str_replace("\\","/", base_path()).Config::get('packages.raalveco.ciberfactura.config.certificate.sandbox.cer');
+        $url_key = str_replace("\\","/", base_path()).Config::get('packages.raalveco.ciberfactura.config.certificate.sandbox.key');
+        $clave_privada = Config::get('packages.raalveco.ciberfactura.config.certificate.sandbox.password');
+
+        $this->noCertificado = CfdiBase::getSerialFromCertificate( $url_cer );
+
+        $this->certificado = CfdiBase::getCertificate( $url_cer, false );
+        $this->key = CfdiBase::getPrivateKey($url_key, $clave_privada);
+    }
+
+    public function loadCertificate($certificate = []){
+        $url_cer = $certificate["cer"];
+        $url_key = $certificate["key"];
+        $clave_privada = $certificate["password"];
+
+        $this->noCertificado = $certificate["serial_number"];
+
+        if(!$url_cer || !$url_key || !$clave_privada){
+            throw new CfdiException("La configuración del certificado de sello digital no ha sido definida.");
+        }
+
+        if(!file_exists($url_cer) || !is_file($url_cer)){
+            throw new CfdiException("El archivo (.cer) del Certificado de Sello Digital no fue encontrado. [$url_cer]");
+        }
+
+        if(!file_exists($url_key) || !is_file($url_key)){
+            throw new CfdiException("El archivo (.key) del Certificado de Sello Digital no fue encontrado. [$url_key]");
+        }
+
+        $this->certificado = CfdiBase::getCertificate( $url_cer, false );
+        $this->key = CfdiBase::getPrivateKey($url_key, $clave_privada);
+
+        $this->certificate = array(
+            'cer' => $url_cer,
+            'key' => $url_key,
+            'password' => $clave_privada
+        );
+
+        $certificate_number = CfdiBase::getSerialFromCertificate( $url_cer );
+
+        if(!$certificate_number){
+            throw new CfdiException("El Certificado de Sello Digital no es correcto.");
+        }
+
+        $this->no_certificado = $certificate_number;
+
+        $certificate = CfdiBase::getCertificate( $url_cer, false );
+
+        if(!$certificate){
+            throw new CfdiException("El Certificado de Sello Digital (.cer) no es correcto.");
+        }
+
+        $this->certificado = $certificate;
+
+        $key = CfdiBase::getPrivateKey($url_key, $clave_privada);
+
+        if(!$key){
+            throw new CfdiException("El Certificado de Sello Digital (.key) no es correcto o la contraseña es inválida.");
+        }
+
+        $this->key = $key;
+    }
+
+    public function load(CfdiFactura $cfdi){
         $nomina = false;
         if(isset($cfdi->nomina) && $cfdi->nomina){
             unset($cfdi->nomina);
             $nomina = true;
         }
-
-        if(empty($certificate)){
-            $url_cer = str_replace("\\","/", base_path())."/config/packages/raalveco/ciberfactura/certificados/".Config::get('packages.raalveco.ciberfactura.config.cer');
-            $url_key = str_replace("\\","/", base_path())."/config/packages/raalveco/ciberfactura/certificados/".Config::get('packages.raalveco.ciberfactura.config.key');
-            $clave_privada = Config::get('packages.raalveco.ciberfactura.config.clave_privada');
-
-            $this->noCertificado = CfdiBase::getSerialFromCertificate( $url_cer );
-        }
-        else{
-            $url_cer = $certificate["cer"];
-            $url_key = $certificate["key"];
-            $clave_privada = $certificate["password"];
-
-            $this->noCertificado = $certificate["serial_number"];
-        }
-
-        $this->certificado = CfdiBase::getCertificate( $url_cer, false );
-        $this->key = CfdiBase::getPrivateKey($url_key, $clave_privada);
 
         $this->cfdi = $cfdi;
         $this->rfc = $cfdi->emisor->rfc;
@@ -207,14 +253,13 @@ class CfdiBase {
     public static function getInfoCertificate ( $cer_path, $to_string = true ){
         $cer_path = str_replace("\\","/", $cer_path);
 
-        echo $cer_path."<br>";
-
         if(!file_exists($cer_path)){
             $response = [
                 "rfc" => "",
                 "serial" => "",
                 "start_date" => "0000-00-00",
-                "end_date" => "0000-00-00"
+                "end_date" => "0000-00-00",
+                "type" => "CSD"
             ];
 
             return $response;
@@ -225,6 +270,23 @@ class CfdiBase {
         $result = shell_exec( $cmd );
 
         $result = explode("\n", $result);
+
+        $type = "CSD";
+
+        foreach($result as $line){
+            if(strpos($line, 'subject') === 0){
+                $line = str_replace(" ", "", $line);
+
+                if(strpos($line, "OU=") !== false){
+                    $type = "CSD";
+                }
+                else{
+                    $type = "FIEL";
+                }
+
+                break;
+            }
+        }
 
         $serial = ""; $notBefore = ""; $notAfter = ""; $rfc = "";
 
@@ -250,9 +312,15 @@ class CfdiBase {
             }
 
             if(strpos($line, "subject") !== false){
+                $line = str_replace(" ", "", $line);
+
                 $line = substr($line, strpos($line, "UniqueIdentifier=") + 17);
 
                 $rfc = trim(substr($line, 0, strpos($line, "/")));
+
+                if(!$rfc){
+                    $rfc = trim(substr($line, 0, strpos($line, ",")));
+                }
             }
 
             if($serial != "" && $notBefore != "" && $notAfter != "" && $rfc != ""){
@@ -318,7 +386,8 @@ class CfdiBase {
             "rfc" => $rfc,
             "serial" => $serial_number,
             "start_date" => $y1."-".$m1."-".$d1,
-            "end_date" => $y2."-".$m2."-".$d2
+            "end_date" => $y2."-".$m2."-".$d2,
+            "type" => $type
         ];
 
         return $response;

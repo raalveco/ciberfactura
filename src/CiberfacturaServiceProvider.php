@@ -4,7 +4,6 @@ namespace Raalveco\Ciberfactura;
 
 use Illuminate\Support\ServiceProvider;
 use Raalveco\Ciberfactura\Libraries\Cfdi;
-use Raalveco\Ciberfactura\Models\CfdiFactura;
 
 class CiberfacturaServiceProvider extends ServiceProvider
 {
