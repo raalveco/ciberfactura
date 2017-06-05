@@ -7,8 +7,8 @@ use Raalveco\Ciberfactura\Models\V32\CfdiComplemento;
 use Raalveco\Ciberfactura\Models\V32\CfdiFactura;
 
 class Cfdi extends CfdiBase{
-    public function __construct(CfdiFactura $cfdi, $certificate = array(), $production = false){
-        parent::__construct($cfdi, $certificate, $production);
+    public function __construct(){
+        parent::__construct();
     }
 
     public function cadenaOriginal(){
@@ -54,7 +54,7 @@ class Cfdi extends CfdiBase{
         $this->xml->timbrar($timbre);
     }
 
-    public function cancelar(){
+    public function cancelar($path = false){
         try{
             $timbrador = new CfdiTimbrador($this->rfc, $this->certificate, $this->production);
 
@@ -65,7 +65,12 @@ class Cfdi extends CfdiBase{
                 $response = "CANCELED";
             }
 
-            file_put_contents(public_path()."/cfdis/".strtoupper($this->cfdi->uuid)."_ACUSE_CANCELACION.xml",$response);
+            if(!$path){
+                file_put_contents(public_path()."/cfdis/".strtoupper($this->cfdi->uuid)."_ACUSE_CANCELACION.xml",$response);
+            }
+            else{
+                file_put_contents($path,$response);
+            }
 
             return $response;
         }

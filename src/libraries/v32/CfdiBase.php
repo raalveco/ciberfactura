@@ -100,6 +100,8 @@ class CfdiBase {
         $this->cfdi->no_certificado = $this->noCertificado;
         $this->cfdi->certificado = $this->certificado;
 
+        $this->tmp_file = public_path()."/temp/".strtoupper(sha1(date("Y-m-d H:i:s".rand(0,100000)))).".xml";
+
         if(CfdiComplemento::where("cfdi_id", $cfdi->id)->count() == 0){
             if(!file_exists(public_path()."/cfdis")){
                 mkdir(public_path()."/cfdis");
@@ -116,7 +118,6 @@ class CfdiBase {
                 mkdir(public_path()."/temp");
             }
 
-            $this->tmp_file = public_path()."/temp/".strtoupper(sha1(date("Y-m-d H:i:s".rand(0,100000)))).".xml";
             $this->xml->saveFile($this->tmp_file, false);
         }
 
