@@ -38,7 +38,7 @@ class Cfdi extends CfdiBase{
         $timbre = simplexml_load_string($response->TimbrarXMLResult);
         $timbre[0]["schemaLocation"] = str_replace('"', '', $tmp);
 
-        CfdiComplemento::create([
+        $complemento = CfdiComplemento::create([
             'cfdi_id' => $this->cfdi->id,
             'version' => (string)$timbre[0]["version"],
             'uuid' => strtoupper((string)$timbre[0]["UUID"]),
