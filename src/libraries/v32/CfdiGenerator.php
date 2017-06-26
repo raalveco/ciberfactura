@@ -92,7 +92,7 @@
             if(!$nomina){
                 //Emisor - Domicilio Fiscal
                 $domicilioFiscal = new Nodo("cfdi:DomicilioFiscal");
-                if($cfdi_emisor->calle) $domicilioFiscal->agregarAtributo("calle", $cfdi_emisor->calle);
+                $domicilioFiscal->agregarAtributo("calle", $cfdi_emisor->calle);
                 if($cfdi_emisor->no_exterior) $domicilioFiscal->agregarAtributo("noExterior", $cfdi_emisor->no_exterior);
                 if($cfdi_emisor->no_interior) $domicilioFiscal->agregarAtributo("noInterior", $cfdi_emisor->no_interior);
                 if($cfdi_emisor->colonia) $domicilioFiscal->agregarAtributo("colonia", $cfdi_emisor->colonia);
@@ -105,7 +105,7 @@
                 //Emisor - Expedido En
                 //Si hay sucursales, sacar datos de la sucursal, sino salen del contribuyente
                 $expedioEn = new Nodo("cfdi:ExpedidoEn");
-                if($cfdi_emisor->calle) $expedioEn->agregarAtributo("calle", $cfdi_emisor->calle);
+                $expedioEn->agregarAtributo("calle", $cfdi_emisor->calle);
                 if($cfdi_emisor->no_exterior) $expedioEn->agregarAtributo("noExterior", $cfdi_emisor->no_exterior);
                 if($cfdi_emisor->no_interior) $expedioEn->agregarAtributo("noInterior", $cfdi_emisor->no_interior);
                 if($cfdi_emisor->colonia) $expedioEn->agregarAtributo("colonia", $cfdi_emisor->colonia);
