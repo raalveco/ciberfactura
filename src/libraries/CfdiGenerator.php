@@ -195,29 +195,43 @@
             $ine_nodo->agregarAtributo("Version", "1.1");
             $ine_nodo->agregarAtributo("TipoProceso", $ine->TipoProceso);
 
-            if(Str::lower($ine->TipoProceso) == "ordinario" && $ine->TipoComite){
+            if(Str::lower($ine->TipoProceso) == "ordinario"){
                 $ine_nodo->agregarAtributo("TipoComite", $ine->TipoComite);
-            }
 
-            if(Str::lower($ine->TipoProceso) == "ordinario" && Str::lower($ine->TipoComite) == "ejecutivo nacional"){
-                $ine_nodo->agregarAtributo("IdContabilidad", $ine->IdContabilidad);
-            }
+                if(Str::lower($ine->TipoComite) == "ejecutivo nacional"){
+                    $ine_nodo->agregarAtributo("IdContabilidad", $ine->IdContabilidad);
+                }
+                else{
+                    if(Str::lower($ine->TipoComite) == "ejecutivo estatal"){
+                        $ine_entidad_nodo = new CfdiNodo("ine:Entidad");
+                        $ine_entidad_nodo->agregarAtributo("ClaveEntidad", $ine->ClaveEntidad);
 
-            if($ine->ClaveEntidad){
+                        $ine_contabilidad_nodo = new CfdiNodo("ine:Contabilidad");
+                        $ine_contabilidad_nodo->agregarAtributo("IdContabilidad", $ine->IdContabilidad);
+
+                        $ine_entidad_nodo->agregarNodo($ine_contabilidad_nodo);
+
+                        $ine_nodo->agregarNodo($ine_entidad_nodo);
+                    }
+                    else{
+                        $ine_nodo->agregarAtributo("IdContabilidad", $ine->IdContabilidad);
+
+                        $ine_entidad_nodo = new CfdiNodo("ine:Entidad");
+                        $ine_entidad_nodo->agregarAtributo("ClaveEntidad", $ine->ClaveEntidad);
+
+                        $ine_nodo->agregarNodo($ine_entidad_nodo);
+                    }
+                }
+            }
+            else{
                 $ine_entidad_nodo = new CfdiNodo("ine:Entidad");
-
                 $ine_entidad_nodo->agregarAtributo("ClaveEntidad", $ine->ClaveEntidad);
+                $ine_entidad_nodo->agregarAtributo("Ambito", $ine->Ambito);
 
-                if($ine->Ambito && Str::lower($ine->TipoProceso) != "ordinario"){
-                    $ine_entidad_nodo->agregarAtributo("Ambito", $ine->Ambito);
-                }
+                $ine_contabilidad_nodo = new CfdiNodo("ine:Contabilidad");
+                $ine_contabilidad_nodo->agregarAtributo("IdContabilidad", $ine->IdContabilidad);
 
-                if(Str::lower($ine->TipoProceso) != "ordinario" || Str::lower($ine->TipoComite) != "ejecutivo nacional"){
-                    $ine_contabilidad_nodo = new CfdiNodo("ine:Contabilidad");
-                    $ine_contabilidad_nodo->agregarAtributo("IdContabilidad", $ine->IdContabilidad);
-
-                    $ine_entidad_nodo->agregarNodo($ine_contabilidad_nodo);
-                }
+                $ine_entidad_nodo->agregarNodo($ine_contabilidad_nodo);
 
                 $ine_nodo->agregarNodo($ine_entidad_nodo);
             }
