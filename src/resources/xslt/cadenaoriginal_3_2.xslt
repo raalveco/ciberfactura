@@ -69,6 +69,7 @@
     <xsl:include href="obrasarteantiguedades.xslt"/>
     <xsl:include href="AcreditamientoIEPS10.xslt"/>
     <xsl:include href="ecc11.xslt"/>
+    <xsl:include href="ine.xslt"/>
     <!--
      Aquí iniciamos el procesamiento de la cadena original con su | inicial y el terminador ||
     -->

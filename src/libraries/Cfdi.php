@@ -8,12 +8,18 @@ class Cfdi extends CfdiBase{
     }
 
     public function cadenaOriginal(){
-        $cadena = $this->cadenaOriginal;
+        $xslt = __DIR__.'/../resources/xslt/cadenaoriginal_3_2.xslt';
 
-        $cadena = "|".substr($cadena,3);
-        $cadena = substr($cadena,0,strlen($cadena)-4)."||";
+        if(!file_exists($xslt)){
+            throw new CfdiException("El archivo xslt para necesario para formar la cadena original de la factura no existe en la ruta definida. [$xslt]");
+        }
 
-        return $cadena;
+        $this->tmp_file = public_path()."/temp/".strtoupper(sha1(date("Y-m-d H:i:s".rand(0,100000)))).".xml";
+        $this->xml->saveFile($this->tmp_file, false);
+
+        $this->cadenaOriginal = CfdiBase::getOriginalString($this->tmp_file, $xslt);
+
+        return $this->cadenaOriginal;
     }
 
     public function sellar(){

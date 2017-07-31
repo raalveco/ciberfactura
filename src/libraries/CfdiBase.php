@@ -118,7 +118,11 @@ class CfdiBase {
         }
     }
 
-    public function loadCfdi(CfdiFactura $cfdi){
+    public function loadCfdiWithINE(CfdiFactura $cfdi){
+        $this->loadCfdi($cfdi, true);
+    }
+
+    public function loadCfdi(CfdiFactura $cfdi, $ine = false){
         if(!$this->path){
             $this->path = public_path()."/cfdis";
         }
@@ -144,7 +148,7 @@ class CfdiBase {
                 mkdir(Config::get('packages.raalveco.ciberfactura.config.path_xmls'));
             }
 
-            $this->xml = new CfdiGenerator($this->cfdi);
+            $this->xml = new CfdiGenerator($this->cfdi, $ine);
 
             if(!file_exists(public_path()."/temp")){
                 mkdir(public_path()."/temp");
@@ -162,6 +166,19 @@ class CfdiBase {
 
         $this->cfdi->cadenaOriginal = trim(str_replace("\n","",  str_replace("\r","",  $this->cadenaOriginal)));
         $this->cfdi->save();
+    }
+
+    public function addComplementoINE($proceso, $comite = false, $id_contabilidad = false, $entidad = false, $ambito = false){
+        $ine = new \stdClass();
+
+        $ine->Version = "1.1";
+        $ine->TipoProceso = $proceso;
+        $ine->TipoComite = $comite;
+        $ine->IdContabilidad = $id_contabilidad;
+        $ine->ClaveEntidad = $entidad;
+        $ine->Ambito = $ambito;
+
+        $this->xml->ine($ine);
     }
 
     public function xml(){

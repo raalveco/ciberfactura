@@ -1,21 +1,31 @@
 <?php
     namespace Raalveco\Ciberfactura\Libraries;
 
+    use Illuminate\Support\Str;
     use Raalveco\Ciberfactura\Models\CfdiFactura;
 
     class CfdiGenerator{
         public $xml;
         public $cfdi;
 
-        public function __construct(CfdiFactura $cfdi){
+        public function __construct(CfdiFactura $cfdi, $ine = false){
             $this->cfdi = $cfdi;
 
             //Comprobante
             $comprobante = new CfdiNodo("cfdi:Comprobante");
-            $comprobante->agregarAtributo("xsi:schemaLocation", "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd");
-            $comprobante->agregarAtributo("xsi:schemaLocation", "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd");
-            $comprobante->agregarAtributo("xmlns:cfdi", "http://www.sat.gob.mx/cfd/3");
-            $comprobante->agregarAtributo("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+
+            if($ine){
+                $comprobante->agregarAtributo("xsi:schemaLocation", "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd http://www.sat.gob.mx/ine http://www.sat.gob.mx/sitio_internet/cfd/ine/ine11.xsd");
+                $comprobante->agregarAtributo("xmlns:cfdi", "http://www.sat.gob.mx/cfd/3");
+                $comprobante->agregarAtributo("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+                $comprobante->agregarAtributo("xmlns:ine", "http://www.sat.gob.mx/ine");
+            }
+            else{
+                $comprobante->agregarAtributo("xsi:schemaLocation", "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd");
+                $comprobante->agregarAtributo("xmlns:cfdi", "http://www.sat.gob.mx/cfd/3");
+                $comprobante->agregarAtributo("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            }
+
             $comprobante->agregarAtributo("version", "3.2");
 
             if($cfdi->serie){
@@ -175,6 +185,46 @@
             $comprobante->agregarNodo($impuestos);
 
             $this->cfdi = $comprobante;
+        }
+
+        public function ine($ine){
+            $complemento = new CfdiNodo("cfdi:Complemento");
+
+            $ine_nodo = new CfdiNodo("ine:INE");
+
+            $ine_nodo->agregarAtributo("Version", "1.1");
+            $ine_nodo->agregarAtributo("TipoProceso", $ine->TipoProceso);
+
+            if($ine->TipoComite){
+                $ine_nodo->agregarAtributo("TipoComite", $ine->TipoComite);
+            }
+
+            if(Str::lower($ine->TipoProceso) == "ordinario" && Str::lower($ine->TipoComite) == "ejecutivo nacional"){
+                $ine_nodo->agregarAtributo("IdContabilidad", $ine->IdContabilidad);
+            }
+
+            if($ine->ClaveEntidad){
+                $ine_entidad_nodo = new CfdiNodo("ine:Entidad");
+
+                $ine_entidad_nodo->agregarAtributo("ClaveEntidad", $ine->ClaveEntidad);
+
+                if($ine->Ambito && Str::lower($ine->TipoProceso) != "ordinario"){
+                    $ine_entidad_nodo->agregarAtributo("Ambito", $ine->Ambito);
+                }
+
+                if(Str::lower($ine->TipoProceso) != "ordinario" || Str::lower($ine->TipoComite) != "ejecutivo nacional"){
+                    $ine_contabilidad_nodo = new CfdiNodo("ine:Contabilidad");
+                    $ine_contabilidad_nodo->agregarAtributo("IdContabilidad", $ine->IdContabilidad);
+
+                    $ine_entidad_nodo->agregarNodo($ine_contabilidad_nodo);
+                }
+
+                $ine_nodo->agregarNodo($ine_entidad_nodo);
+            }
+
+            $complemento->agregarNodo($ine_nodo);
+
+            $this->cfdi->agregarNodo($complemento);
         }
 
         public function addendar(){
