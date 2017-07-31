@@ -195,7 +195,7 @@
             $ine_nodo->agregarAtributo("Version", "1.1");
             $ine_nodo->agregarAtributo("TipoProceso", $ine->TipoProceso);
 
-            if($ine->TipoComite){
+            if($ine->TipoComite && Str::lower($ine->TipoProceso) != "ordinario"){
                 $ine_nodo->agregarAtributo("TipoComite", $ine->TipoComite);
             }
 
