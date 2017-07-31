@@ -23,7 +23,7 @@ class Cfdi extends CfdiBase{
     }
 
     public function sellar(){
-        $this->sello = $this->signData($this->key, $this->cadenaOriginal);
+        $this->sello = $this->signData($this->key, $this->cadenaOriginal());
 
         $this->cfdi->sello = $this->sello;
         $this->cfdi->save();
