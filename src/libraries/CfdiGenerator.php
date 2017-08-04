@@ -7,6 +7,7 @@
     class CfdiGenerator{
         public $xml;
         public $cfdi;
+        public $complemento;
 
         public function __construct(CfdiFactura $cfdi, $ine = false){
             $this->cfdi = $cfdi;
@@ -184,12 +185,14 @@
 
             $comprobante->agregarNodo($impuestos);
 
+            $this->complemento = new CfdiNodo("cfdi:Complemento");
+
+            $comprobante->agregarNodo($this->complemento);
+
             $this->cfdi = $comprobante;
         }
 
         public function ine($ine){
-            $complemento = new CfdiNodo("cfdi:Complemento");
-
             $ine_nodo = new CfdiNodo("ine:INE");
 
             $ine_nodo->agregarAtributo("Version", "1.1");
@@ -236,9 +239,7 @@
                 $ine_nodo->agregarNodo($ine_entidad_nodo);
             }
 
-            $complemento->agregarNodo($ine_nodo);
-
-            $this->cfdi->agregarNodo($complemento);
+            $this->complemento->agregarNodo($ine_nodo);
         }
 
         public function addendar(){
@@ -248,8 +249,6 @@
         }
 
         public function timbrar($timbre){
-            $complemento = new CfdiNodo("cfdi:Complemento");
-
             $timbre_fiscal = new CfdiNodo("tfd:TimbreFiscalDigital");
 
             $timbre_fiscal->agregarAtributo("xmlns:tfd", "http://www.sat.gob.mx/TimbreFiscalDigital");
@@ -261,8 +260,8 @@
             $timbre_fiscal->agregarAtributo("selloSAT", $timbre[0]["selloSAT"]);
             $timbre_fiscal->agregarAtributo("UUID", $timbre[0]["UUID"]);
 
-            $complemento->agregarNodo($timbre_fiscal);
-            $this->cfdi->agregarNodo($complemento);
+            $this->complemento->agregarNodo($timbre_fiscal);
+            $this->cfdi->agregarNodo($this->complemento);
         }
 
         public function sellar($sello, $noCertificado, $certificado){
