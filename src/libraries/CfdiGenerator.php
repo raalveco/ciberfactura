@@ -261,7 +261,6 @@
             $timbre_fiscal->agregarAtributo("UUID", $timbre[0]["UUID"]);
 
             $this->complemento->agregarNodo($timbre_fiscal);
-            $this->cfdi->agregarNodo($this->complemento);
         }
 
         public function sellar($sello, $noCertificado, $certificado){
