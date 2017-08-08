@@ -16,15 +16,14 @@
             $comprobante = new CfdiNodo("cfdi:Comprobante");
 
             if($ine){
-                $comprobante->agregarAtributo("xsi:schemaLocation", "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd http://www.sat.gob.mx/ine http://www.sat.gob.mx/sitio_internet/cfd/ine/ine11.xsd");
                 $comprobante->agregarAtributo("xmlns:cfdi", "http://www.sat.gob.mx/cfd/3");
                 $comprobante->agregarAtributo("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-                $comprobante->agregarAtributo("xmlns:ine", "http://www.sat.gob.mx/ine");
+                $comprobante->agregarAtributo("xsi:schemaLocation", "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd http://www.sat.gob.mx/ine http://www.sat.gob.mx/sitio_internet/cfd/ine/ine11.xsd");
             }
             else{
-                $comprobante->agregarAtributo("xsi:schemaLocation", "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd");
                 $comprobante->agregarAtributo("xmlns:cfdi", "http://www.sat.gob.mx/cfd/3");
                 $comprobante->agregarAtributo("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+                $comprobante->agregarAtributo("xsi:schemaLocation", "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd");
             }
 
             $comprobante->agregarAtributo("version", "3.2");
@@ -194,6 +193,8 @@
 
         public function ine($ine){
             $ine_nodo = new CfdiNodo("ine:INE");
+
+            $ine_nodo->agregarAtributo("xmlns:ine", "http://www.sat.gob.mx/ine");
 
             $ine_nodo->agregarAtributo("Version", "1.1");
             $ine_nodo->agregarAtributo("TipoProceso", $ine->TipoProceso);
