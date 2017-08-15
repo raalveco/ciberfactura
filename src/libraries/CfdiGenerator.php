@@ -17,6 +17,7 @@
 
             if($ine){
                 $comprobante->agregarAtributo("xmlns:cfdi", "http://www.sat.gob.mx/cfd/3");
+                $comprobante->agregarAtributo("xmlns:ine", "http://www.sat.gob.mx/ine");
                 $comprobante->agregarAtributo("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
                 $comprobante->agregarAtributo("xsi:schemaLocation", "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd http://www.sat.gob.mx/ine http://www.sat.gob.mx/sitio_internet/cfd/ine/ine11.xsd");
             }
@@ -194,8 +195,6 @@
         public function ine($ine){
             $ine_nodo = new CfdiNodo("ine:INE");
 
-            $ine_nodo->agregarAtributo("xmlns:ine", "http://www.sat.gob.mx/ine");
-
             $ine_nodo->agregarAtributo("Version", "1.1");
             $ine_nodo->agregarAtributo("TipoProceso", $ine->TipoProceso);
 
@@ -253,6 +252,7 @@
             $timbre_fiscal = new CfdiNodo("tfd:TimbreFiscalDigital");
 
             $timbre_fiscal->agregarAtributo("xmlns:tfd", "http://www.sat.gob.mx/TimbreFiscalDigital");
+            $timbre_fiscal->agregarAtributo("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
             $timbre_fiscal->agregarAtributo("xsi:schemaLocation", $timbre["schemaLocation"]);
             $timbre_fiscal->agregarAtributo("version", $timbre[0]["version"]);
             $timbre_fiscal->agregarAtributo("FechaTimbrado", $timbre[0]["FechaTimbrado"]);
