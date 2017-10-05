@@ -161,7 +161,15 @@ class CfdiBase {
         }
         else{
             $xml_file = $this->path."/".strtoupper($this->cfdi->uuid()).".xml";
-            $this->cadenaOriginal = CfdiBase::getOriginalString($xml_file, $xslt);
+
+            if(file_exists($xml_file)){
+                $this->cadenaOriginal = CfdiBase::getOriginalString($xml_file, $xslt);
+            }
+            else{
+                $xml_file = $this->path."/".strtoupper($this->cfdi->serie.$this->cfdi->folio).".xml";
+
+                $this->cadenaOriginal = CfdiBase::getOriginalString($xml_file, $xslt);
+            }
         }
 
         $this->cfdi->cadenaOriginal = trim(str_replace("\n","",  str_replace("\r","",  $this->cadenaOriginal)));
